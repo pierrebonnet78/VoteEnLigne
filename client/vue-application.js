@@ -1,4 +1,4 @@
-const Accueil = window.httpVueLoader("./components/Accueil.vue");
+const AdminLogin = window.httpVueLoader("./components/AdminLogin.vue");
 const Catalogue = window.httpVueLoader("./components/Catalogue.vue");
 const Panier = window.httpVueLoader("./components/Panier.vue");
 const Temp = window.httpVueLoader("./components/Temp.vue");
@@ -6,7 +6,7 @@ const Home = window.httpVueLoader("./components/Home.vue");
 
 const routes = [
   { path: "/", component: Home },
-  { path: "/Accueil", component: Accueil },
+  { path: "/AdminLogin", component: AdminLogin },
   { path: "/catalogue", component: Temp },
   { path: "/panier", component: Panier },
 ];

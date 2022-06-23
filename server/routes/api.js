@@ -65,15 +65,17 @@ router.post("/loginAdmin", (req, res) => {
   const password = req.body.password;
 
   //verifie si le compte est dans la bdd
-  var sql = "SELECT * FROM citoyen u where u.email = '" + email + "'";
+
+  var sql = "SELECT * FROM admin a where a.email = '" + email + "'";
+
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
-
     if (result.length != 0) {
       //email present dans la bdd
       //verifie si le mdp est bon
-      let compare = bcrypt.compareSync(password, result[0].MotDePasse);
-      if (compare && result[0].Admin) {
+
+      let compare = bcrypt.compareSync(password, result[0].MotDePasseAdmin);
+      if (compare && result[0].MotDePasseAdmin) {
         //le mdp est bon
         req.session.currentuser = result;
         //console.log(req.session)
@@ -191,30 +193,18 @@ router.post("/addlivre", (req, res) => {
 });
 
 router.post("/listeelectorale", (req, res) => {
-  const adminId = req.body.IdCitoyen;
-  console.log("Admin id : ", adminId);
-
+  const adminEmail = req.body.Email;
   //recupere l'id de la ville et du departement de l'admin
+
   var sql =
-    "select v.IdVille, dep.IdDepartement from citoyen c inner join adresse a on c.IdAdresseDomicile = a.IdAdresse" +
-    " inner join Appartient ap on a.IdAdresse = ap.IdAdresse inner join Ville v on" +
-    " v.IdVille = ap.IdVille inner join Dans d on  d.IdVille = v.IdVille inner join Departement dep on" +
-    " dep.IdDepartement = d.IdDepartement where c.IdCitoyen = " +
-    adminId +
-    " and c.admin = 1;";
+    "select IdVilleMairie from admin where Email = '" + adminEmail + "';";
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
-    console.log(result[0].IdVille);
     //recupere la liste electrorale (tous les citoyens) de la ville de l'admin.
     var sql2 =
-      "select * from citoyen c inner join adresse a on c.IdAdresseDomicile = a.IdAdresse" +
-      " inner join Appartient ap on a.IdAdresse = ap.IdAdresse inner join Ville v on" +
-      " v.IdVille = ap.IdVille inner join Dans d on  d.IdVille = v.IdVille inner join Departement dep on" +
-      " dep.IdDepartement = d.IdDepartement where d.IdVille = " +
-      result[0].IdVille +
-      " and dep.IdDepartement = " +
-      result[0].IdDepartement;
-
+      "select * from citoyen where citoyen.IdVilleDomicile = " +
+      result[0].IdVilleMairie +
+      ";";
     db.query(sql2, function (err, result, fields) {
       if (err) throw err;
       res.json(result);

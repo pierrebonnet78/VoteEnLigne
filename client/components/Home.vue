@@ -9,7 +9,7 @@
         </div>
         <div class = "button">
             <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
-            <router-link to='/Accueil' class="btn-default">Connexion Admin</router-link>
+            <router-link to='/AdminLogin' class="btn-default">Connexion Admin</router-link>
         </div>
     </div>
 </template>
