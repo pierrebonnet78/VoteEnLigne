@@ -1,4 +1,5 @@
 const AdminLogin = window.httpVueLoader("./components/AdminLogin.vue");
+const LoginUser = window.httpVueLoader("./components/LoginUser.vue");
 const Catalogue = window.httpVueLoader("./components/Catalogue.vue");
 const Panier = window.httpVueLoader("./components/Panier.vue");
 const Temp = window.httpVueLoader("./components/Temp.vue");
@@ -6,6 +7,7 @@ const Home = window.httpVueLoader("./components/Home.vue");
 
 const routes = [
   { path: "/", component: Home },
+  { path: "/LoginUser", component: LoginUser },
   { path: "/AdminLogin", component: AdminLogin },
   { path: "/catalogue", component: Temp },
   { path: "/panier", component: Panier },
@@ -30,6 +32,25 @@ var app = new Vue({
   methods: {
     async loginAdmin(user) {
       const res = await axios.post("/api/loginAdmin", user);
+      if (res.data[0] == -1) {
+        alert("Mot de passe incorrect");
+      } else if (res.data[0] == 0) {
+        alert("Email incorrect");
+      } else {
+        alert("Connexion réussie");
+        this.$data.currentuser = res.data[1];
+        const res2 = await axios.post(
+          "/api/listeelectorale",
+          this.$data.currentuser[0]
+        );
+        console.log(res2);
+        this.$data.listeelectorale = res2.data;
+
+        router.push("/catalogue");
+      }
+    },
+    async loginUser(user) {
+      const res = await axios.post("/api/loginUser", user);
       if (res.data[0] == -1) {
         alert("Mot de passe incorrect");
       } else if (res.data[0] == 0) {

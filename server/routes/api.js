@@ -5,9 +5,9 @@ const bcrypt = require("bcryptjs");
 const mysql = require("mysql");
 
 const db = mysql.createConnection({
-  host: "127.0.0.1",
+  host: "localhost",
   user: "root",
-  password: "password",
+  password: "Emma2001",
   database: "voteenlignedb",
 });
 
@@ -90,6 +90,38 @@ router.post("/loginAdmin", (req, res) => {
     }
   });
 });
+
+router.post("/loginUser", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  //verifie si le compte est dans la bdd
+
+  var sql = "SELECT * FROM Citoyen c where c.email = '" + email + "'";
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result.length != 0) {
+      //email present dans la bdd
+      //verifie si le mdp est bon
+
+      let compare = bcrypt.compareSync(password, result[0].MotDePasseAdmin);
+      if (compare && result[0].MotDePasseAdmin) {
+        //le mdp est bon
+        req.session.currentuser = result;
+        //console.log(req.session)
+        res.json([1, req.session.currentuser]);
+      } else {
+        //le mdp n'est pas bon
+        res.json([-1, undefined]);
+      }
+    } else {
+      //email pas present dans la bdd
+      res.json([0, undefined]);
+    }
+  });
+});
+
 
 router.get("/livres", (req, res) => {
   db.query("SELECT * FROM livres", function (err, result, fields) {
