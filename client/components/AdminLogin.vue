@@ -39,7 +39,7 @@ module.exports = {
   },
   methods: {
     login() {
-      this.$emit("login", this.user);
+      this.$emit("loginadmin", this.user);
     },
   },
 };

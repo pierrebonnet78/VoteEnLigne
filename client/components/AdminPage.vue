@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1>Liste Electorale</h1>
+    <h1>
+      Liste Electorale de {{ currentAdmin.Nom }} {{ currentAdmin.CodePostal }}
+    </h1>
 
     <div v-if="loading" class="loading">
       <h3>Loading...</h3>
@@ -48,49 +50,51 @@
       </table>
     </div>
 
-    <input
-      type="text"
-      v-model="newCitoyen.nom"
-      placeholder="Nom"
-      class="input-text"
-    /><br />
-    <input
-      type="text"
-      v-model="newCitoyen.prenom"
-      placeholder="Prénom"
-      class="input-text"
-    /><br />
-    <input
-      type="date"
-      v-model="newCitoyen.date_naissance"
-      placeholder="Date de naissance"
-      class="input-text"
-    /><br />
-    <input
-      type="text"
-      v-model="newCitoyen.lieu_naissance"
-      placeholder="Lieu de naissance"
-      class="input-text"
-    /><br />
-    <input
-      type="text"
-      v-model="newCitoyen.numero_electeur"
-      placeholder="Numéro d'élécteur"
-      class="input-text"
-    /><br />
-    <input
-      type="text"
-      v-model="newCitoyen.numero_carte_id"
-      placeholder="Numéro carte Identité"
-      class="input-text"
-    /><br />
-    <input
-      type="text"
-      v-model="newCitoyen.numero_passport"
-      placeholder="Numéro passport"
-      class="input-text"
-    /><br />
-    <button type="submit" class="btn-default">Ajouter</button>
+    <form @submit.prevent="addCitoyen" id="myform">
+      <input
+        type="text"
+        v-model="newCitoyen.nom"
+        placeholder="Nom"
+        class="input-text"
+      /><br />
+      <input
+        type="text"
+        v-model="newCitoyen.prenom"
+        placeholder="Prénom"
+        class="input-text"
+      /><br />
+      <input
+        type="date"
+        v-model="newCitoyen.date_naissance"
+        placeholder="Date de naissance"
+        class="input-text"
+      /><br />
+      <input
+        type="text"
+        v-model="newCitoyen.lieu_naissance"
+        placeholder="Ville de naissance"
+        class="input-text"
+      /><br />
+      <input
+        type="text"
+        v-model="newCitoyen.numero_electeur"
+        placeholder="Numéro d'élécteur"
+        class="input-text"
+      /><br />
+      <input
+        type="text"
+        v-model="newCitoyen.numero_carte_id"
+        placeholder="Numéro carte Identité"
+        class="input-text"
+      /><br />
+      <input
+        type="text"
+        v-model="newCitoyen.numero_passeport"
+        placeholder="Numéro passport"
+        class="input-text"
+      /><br />
+      <button type="submit" class="btn-default">Ajouter</button>
+    </form>
   </div>
 </template>
 
@@ -105,7 +109,8 @@ module.exports = {
         lieu_naissance: "",
         numero_electeur: "",
         numero_carte_id: "",
-        numero_passport: "",
+        numero_passeport: "",
+        lieu_domicile: "",
       },
       loading: true,
       error: null,
@@ -115,7 +120,9 @@ module.exports = {
   },
   methods: {
     addCitoyen() {
-      this.$emit("add-livre", this.newCitoyen);
+      console.log("Add");
+      this.$emit("addcitoyen", this.newCitoyen);
+      document.getElementById("myform").reset();
     },
     async fetchData() {
       this.error = this.listeelectorale = null;
@@ -130,6 +137,7 @@ module.exports = {
   },
   async created() {
     this.currentAdmin = JSON.parse(localStorage.getItem("admin"));
+    this.newCitoyen.lieu_domicile = this.currentAdmin.IdVille;
     this.fetchData();
   },
   //   computed: {

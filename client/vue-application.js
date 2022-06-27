@@ -95,6 +95,13 @@ var app = new Vue({
       const res2 = await axios.get("/api/livres");
       this.$data.livres = res2.data;
     },
+    async addCitoyen(citoyen) {
+      const res = await axios.post("api/addCitoyen", citoyen);
+      console.log(res);
+      if (res.data[0] == 400) {
+        alert("Erreur dans la saisie");
+      }
+    },
     async deleteLPanier(object) {
       const res = await axios.post("api/deletelpanier", object);
       //actualise le panier

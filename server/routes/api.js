@@ -7,7 +7,7 @@ const mysql = require("mysql");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Emma2001",
+  password: "password",
   database: "voteenlignedb",
 });
 
@@ -66,7 +66,12 @@ router.post("/loginAdmin", (req, res) => {
 
   //verifie si le compte est dans la bdd
 
-  var sql = "SELECT * FROM admin a where a.email = '" + email + "'";
+  var sql =
+    "SELECT * FROM admin a " +
+    " inner join Ville v on a.IdVilleMairie = v.IdVille" +
+    " where a.email ='" +
+    email +
+    "';";
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
@@ -121,7 +126,6 @@ router.post("/loginUser", (req, res) => {
     }
   });
 });
-
 
 router.get("/livres", (req, res) => {
   db.query("SELECT * FROM livres", function (err, result, fields) {
@@ -184,43 +188,67 @@ router.post("/deletelivre", (req, res) => {
   );
 });
 
-router.post("/addlivre", (req, res) => {
-  const titre = req.body.titre;
-  const auteur = req.body.auteur;
-  const quantity = parseInt(req.body.quantity);
-  const image = req.body.image;
+router.post("/addCitoyen", (req, res) => {
+  const nom = req.body.nom;
+  const prenom = req.body.prenom;
+  const date_naissance = req.body.date_naissance;
+  const lieu_naissance = req.body.lieu_naissance;
+  const numero_electeur = req.body.numero_electeur;
+  const numero_carte_id = req.body.numero_carte_id;
+  const numero_passeport = req.body.numero_passeport;
+  const id_lieu_domicile = req.body.lieu_domicile;
 
   // vérification de la validité des données d'entrée
   if (
-    typeof titre !== "string" ||
-    titre === "" ||
-    typeof auteur !== "string" ||
-    auteur === "" ||
-    typeof image !== "string" ||
-    image === "" ||
-    isNaN(quantity) ||
-    quantity <= 0
+    typeof nom !== "string" ||
+    nom === "" ||
+    typeof prenom !== "string" ||
+    prenom === "" ||
+    typeof numero_carte_id !== "string" ||
+    numero_carte_id === "" ||
+    typeof numero_passeport !== "string" ||
+    numero_passeport === "" ||
+    typeof lieu_naissance !== "string" ||
+    lieu_naissance === "" ||
+    // typeof date_naissance !== "string" ||
+    // image === "" ||
+    isNaN(numero_electeur)
   ) {
-    res.status(400).json({ message: "bad request" });
+    res.json([400, undefined]);
     return;
   }
+  var sql = "SELECT IdVille FROM Ville where Nom ='" + lieu_naissance + "';";
 
-  var sql =
-    "INSERT INTO livres (titre,auteur,quantity,image) VALUES (" +
-    "'" +
-    titre +
-    "'" +
-    ",'" +
-    auteur +
-    "'," +
-    quantity +
-    "," +
-    "'" +
-    image +
-    "')";
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.json("Livre ajouté");
+    //var sql2 = "SELECT IdVille from Ville where Nom ='" + lieu_domicile + "';";
+    //db.query(sql2, function (err, result2, fields) {
+    var sql3 =
+      "Insert into Citoyen (Nom,Prenom,NomParti,DateNaissance,NumeroElecteur,NumeroPasseport,NumeroIdentite,IdVilleNaissance,IdVilleDomicile) " +
+      "VALUES ('" +
+      nom +
+      "','" +
+      prenom +
+      "'," +
+      null +
+      ",'" +
+      date_naissance +
+      "'," +
+      numero_electeur +
+      ",' " +
+      numero_passeport +
+      "','" +
+      numero_carte_id +
+      "'," +
+      result[0].IdVille +
+      "," +
+      id_lieu_domicile +
+      ");";
+    db.query(sql3, function (err, result, fields) {
+      if (err) throw err;
+    });
+    res.json("Citoyen Ajouté");
+    //});
   });
 });
 
