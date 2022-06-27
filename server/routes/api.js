@@ -212,6 +212,14 @@ router.post("/listeelectorale", (req, res) => {
   });
 });
 
+router.get("/listeelectoralev2", (req, res) => {
+  var sql = "select * from citoyen where citoyen.IdVilleDomicile = 1;";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
 router.post("/deletelpanier", (req, res) => {
   const livreId = req.body.livreid;
   const userId = req.body.userid;

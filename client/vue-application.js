@@ -3,12 +3,12 @@ const Catalogue = window.httpVueLoader("./components/Catalogue.vue");
 const Panier = window.httpVueLoader("./components/Panier.vue");
 const Temp = window.httpVueLoader("./components/Temp.vue");
 const Home = window.httpVueLoader("./components/Home.vue");
+const AdminPage = window.httpVueLoader("./components/AdminPage.vue");
 
 const routes = [
   { path: "/", component: Home },
   { path: "/AdminLogin", component: AdminLogin },
-  { path: "/catalogue", component: Temp },
-  { path: "/panier", component: Panier },
+  { path: "/AdminPage", component: AdminPage },
 ];
 
 const router = new VueRouter({
@@ -26,6 +26,7 @@ var app = new Vue({
   async mounted() {
     //const res = await axios.get('/api/livres')
     this.livres = null;
+    this.listeelectorale = null;
   },
   methods: {
     async loginAdmin(user) {
@@ -35,16 +36,10 @@ var app = new Vue({
       } else if (res.data[0] == 0) {
         alert("Email incorrect");
       } else {
+        //stockage de l'admin dans le storage du navigateur
+        localStorage.admin = JSON.stringify(res.data[1][0]);
         alert("Connexion réussie");
-        this.$data.currentuser = res.data[1];
-        const res2 = await axios.post(
-          "/api/listeelectorale",
-          this.$data.currentuser[0]
-        );
-        console.log(res2);
-        this.$data.listeelectorale = res2.data;
-
-        router.push("/catalogue");
+        router.push("/AdminPage");
       }
     },
     async inscriptionUser(user) {

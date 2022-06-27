@@ -31,8 +31,9 @@ module.exports = {
 
 <style scoped>
 form{
-  text-align: center;
-  margin-bottom: 0;
+    background: rgb(190, 189, 189); 
+    border: 0; 
+    font-size:18px;
 }
 
 button{
