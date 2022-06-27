@@ -1,4 +1,5 @@
 const AdminLogin = window.httpVueLoader("./components/AdminLogin.vue");
+const LoginUser = window.httpVueLoader("./components/LoginUser.vue");
 const Catalogue = window.httpVueLoader("./components/Catalogue.vue");
 const Panier = window.httpVueLoader("./components/Panier.vue");
 const Temp = window.httpVueLoader("./components/Temp.vue");
@@ -7,6 +8,7 @@ const AdminPage = window.httpVueLoader("./components/AdminPage.vue");
 
 const routes = [
   { path: "/", component: Home },
+  { path: "/LoginUser", component: LoginUser },
   { path: "/AdminLogin", component: AdminLogin },
   { path: "/AdminPage", component: AdminPage },
 ];
@@ -40,6 +42,25 @@ var app = new Vue({
         localStorage.admin = JSON.stringify(res.data[1][0]);
         alert("Connexion réussie");
         router.push("/AdminPage");
+      }
+    },
+    async loginUser(user) {
+      const res = await axios.post("/api/loginUser", user);
+      if (res.data[0] == -1) {
+        alert("Mot de passe incorrect");
+      } else if (res.data[0] == 0) {
+        alert("Email incorrect");
+      } else {
+        alert("Connexion réussie");
+        this.$data.currentuser = res.data[1];
+        const res2 = await axios.post(
+          "/api/listeelectorale",
+          this.$data.currentuser[0]
+        );
+        console.log(res2);
+        this.$data.listeelectorale = res2.data;
+
+        router.push("/catalogue");
       }
     },
     async inscriptionUser(user) {

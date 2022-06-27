@@ -22,7 +22,6 @@
 
       <div id="btn-grp">
         <button @click="login()" class="btn-default">Connexion</button>
-        <button @click="inscription()" class="btn-default">Inscription</button>
       </div>
     </form>
   </div>
@@ -41,9 +40,6 @@ module.exports = {
   methods: {
     login() {
       this.$emit("login", this.user);
-    },
-    inscription() {
-      this.$emit("inscription", this.user);
     },
   },
 };
