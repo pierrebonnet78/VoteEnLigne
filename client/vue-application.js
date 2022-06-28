@@ -130,5 +130,9 @@ var app = new Vue({
       const res2 = await axios.post("/api/panier", this.$data.currentuser[0]);
       this.$data.panier.livres = res2.data;
     },
+    async deleteCitoyen(citoyen) {
+      const res = await axios.post("/api/deletecitoyen", citoyen);
+      console.log(res);
+    },
   },
 });

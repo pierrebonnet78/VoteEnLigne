@@ -321,4 +321,13 @@ router.get("/user", (req, res) => {
   res.json(req.session.currentuser);
 });
 
+router.post("/deletecitoyen", (req, res) => {
+  const citoyenId = req.body.IdCitoyen;
+  var sql = "DELETE FROM citoyen WHERE IdCitoyen = " + citoyenId + ";";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(true);
+  });
+});
+
 module.exports = router;

@@ -27,9 +27,10 @@
               <span style="font-weight: bold">N° passeport</span>
             </th>
             <th class="tg-0lax">
-              <span style="font-weight: bold; color: #000"
-                >N° carte d'identité</span
-              >
+              <span style="font-weight: bold">N° carte d'identité</span>
+            </th>
+            <th class="tg-zv4m">
+              <span style="font-weight: bold"></span>
             </th>
           </tr>
         </thead>
@@ -45,6 +46,12 @@
             <td class="tg-0lax">{{ citoyen.NumeroElecteur }}</td>
             <td class="tg-0lax">{{ citoyen.NumeroPasseport }}</td>
             <td class="tg-0lax">{{ citoyen.NumeroIdentite }}</td>
+            <td class="tg-zv4m">
+              <div>
+                <button @click="updateCitoyen(citoyen)">Modifier</button>
+                <button @click="deleteCitoyen(citoyen)">Supprimer</button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -120,7 +127,6 @@ module.exports = {
   },
   methods: {
     addCitoyen() {
-      console.log("Add");
       this.$emit("addcitoyen", this.newCitoyen);
       document.getElementById("myform").reset();
     },
@@ -134,37 +140,18 @@ module.exports = {
         this.error = er;
       }
     },
+    deleteCitoyen(citoyen) {
+      this.$emit("deletecitoyen", citoyen);
+    },
+    updateCitoyen(citoyen) {
+      console.log("Citoyen to update :", citoyen);
+    },
   },
   async created() {
     this.currentAdmin = JSON.parse(localStorage.getItem("admin"));
     this.newCitoyen.lieu_domicile = this.currentAdmin.IdVille;
     this.fetchData();
   },
-  //   computed: {
-  //     async update_listeelectoral() {
-  //       try {
-  //         const res = await axios.post("/api/listeelectorale", this.currentAdmin);
-  //         this.loading = false;
-  //         return (this.listeelectorale = res.data);
-  //       } catch (er) {
-  //         this.error = er;
-  //       }
-  //     },
-  //   },
-
-  //   mounted() {
-  //     this.$emit("refreshuser");
-  //     console.log(this.currentAdmin);
-
-  //     // if (!this.listeelectorale) {
-  //     //   const res = await axios.post(
-  //     //     "/api/listeelectorale",
-  //     //     this.$data.currentAdmin[0]
-  //     //   );
-  //     //   console.log(res);
-  //     //   this.$data.listeelectorale = res.data;
-  //     // }
-  //   },
 };
 </script>
 
@@ -234,5 +221,12 @@ module.exports = {
 .tg .tg-0lax {
   text-align: left;
   vertical-align: top;
+}
+
+.tg .tg-zv4m {
+  border-color: #ffffff;
+  text-align: left;
+  vertical-align: top;
+  padding-left: 30px;
 }
 </style>
