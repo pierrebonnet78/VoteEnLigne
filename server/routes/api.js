@@ -97,12 +97,22 @@ router.post("/loginAdmin", (req, res) => {
 });
 
 router.post("/loginUser", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const nom = req.body.nom;
+  const prenom = req.body.prenom;
+  const dateNaissance = req.body.dateNaissance;
+  const numElecteur = req.body.numElecteur;
+  const numPasseport = req.body.numPasseport;
+  const numID = req.body.numID;
+  const lieuNaissance = req.body.lieuNaissance;
 
   //verifie si le compte est dans la bdd
 
-  var sql = "SELECT * FROM Citoyen c where c.email = '" + email + "'";
+  var sql =  
+  "SELECT * FROM Citoyen c " +
+  " inner join Ville v on a.IdVilleMairie = v.IdVille" +
+  " where a.email ='" +
+  email +
+  "';";
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err;

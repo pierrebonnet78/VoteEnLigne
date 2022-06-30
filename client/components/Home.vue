@@ -5,7 +5,7 @@
             <p> Vote en ligne</p>
             </div>
         <div class="selector">
-            <router-link to='/LogieUser' class="btn-default">Sélectionner une commune</router-link>
+            <router-link to='/LoginUser' class="btn-default">Sélectionner une commune</router-link>
         </div>
         <div class = "button">
             <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
