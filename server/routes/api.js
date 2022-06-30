@@ -211,16 +211,20 @@ router.post("/addCitoyen", (req, res) => {
     typeof lieu_naissance !== "string" ||
     lieu_naissance === "" ||
     // typeof date_naissance !== "string" ||
-    // image === "" ||
     isNaN(numero_electeur)
   ) {
     res.json([400, undefined]);
     return;
   }
-  var sql = "SELECT IdVille FROM Ville where Nom ='" + lieu_naissance + "';";
+  var sql =
+    "SELECT IdVille FROM Ville where NomVille ='" + lieu_naissance + "';";
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
+    if (result.length === 0) {
+      res.json([400, undefined]);
+      return;
+    }
     //var sql2 = "SELECT IdVille from Ville where Nom ='" + lieu_domicile + "';";
     //db.query(sql2, function (err, result2, fields) {
     var sql3 =
@@ -252,6 +256,72 @@ router.post("/addCitoyen", (req, res) => {
   });
 });
 
+router.post("/updateCitoyen", (req, res) => {
+  const nom = req.body.nom;
+  const prenom = req.body.prenom;
+  const date_naissance = req.body.date_naissance;
+  const lieu_naissance = req.body.lieu_naissance;
+  const numero_electeur = req.body.numero_electeur;
+  const numero_carte_id = req.body.numero_carte_id;
+  const numero_passeport = req.body.numero_passeport;
+  const id_lieu_domicile = req.body.lieu_domicile;
+
+  // vérification de la validité des données d'entrée
+  if (
+    typeof nom !== "string" ||
+    nom === "" ||
+    typeof prenom !== "string" ||
+    prenom === "" ||
+    typeof numero_carte_id !== "string" ||
+    numero_carte_id === "" ||
+    typeof numero_passeport !== "string" ||
+    numero_passeport === "" ||
+    typeof lieu_naissance !== "string" ||
+    lieu_naissance === "" ||
+    // typeof date_naissance !== "string" ||
+    isNaN(numero_electeur)
+  ) {
+    res.json([401, undefined]);
+    return;
+  }
+  var sql =
+    "SELECT IdVille FROM Ville where NomVille ='" + lieu_naissance + "';";
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    if (result.length === 0) {
+      res.json([400, undefined]);
+      return;
+    }
+    //var sql2 = "SELECT IdVille from Ville where Nom ='" + lieu_domicile + "';";
+    //db.query(sql2, function (err, result2, fields) {
+    var sql3 =
+      "Update citoyen c set c.Nom='" +
+      nom +
+      "' c.Prenom ='" +
+      prenom +
+      "' c.DateNaissance ='" +
+      date_naissance +
+      "' c.NumeroElecteur =" +
+      numero_electeur +
+      " c.NumeroPasseport='" +
+      numero_passeport +
+      "' c.NumeroIdentite='" +
+      numero_carte_id +
+      "' c.IdVilleNaissance=" +
+      result[0].IdVille +
+      " c.IdVilleDomicile=" +
+      id_lieu_domicile +
+      " where c.IdCitoyen=2" +
+      ";";
+    db.query(sql3, function (err, result, fields) {
+      if (err) throw err;
+    });
+    res.json("Citoyen Updaté");
+    //});
+  });
+});
+
 router.post("/listeelectorale", (req, res) => {
   const adminEmail = req.body.Email;
   //recupere l'id de la ville et du departement de l'admin
@@ -262,7 +332,8 @@ router.post("/listeelectorale", (req, res) => {
     if (err) throw err;
     //recupere la liste electrorale (tous les citoyens) de la ville de l'admin.
     var sql2 =
-      "select * from citoyen where citoyen.IdVilleDomicile = " +
+      "select *, Ville.NomVille from citoyen inner join Ville" +
+      " on citoyen.IdVilleNaissance = Ville.IdVille where citoyen.IdVilleDomicile = " +
       result[0].IdVilleMairie +
       ";";
     db.query(sql2, function (err, result, fields) {
@@ -274,6 +345,14 @@ router.post("/listeelectorale", (req, res) => {
 
 router.get("/listeelectoralev2", (req, res) => {
   var sql = "select * from citoyen where citoyen.IdVilleDomicile = 1;";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getville", (req, res) => {
+  var sql = "Select * from Ville ORDER BY CodePostal;";
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(result);

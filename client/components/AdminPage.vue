@@ -19,7 +19,10 @@
             <th class="tg-0lax">
               <span style="font-weight: bold">Date de naissance</span>
             </th>
-            <!-- <th class="tg-0lax"><span style="font-weight:bold">Lieu de naissance</span></th> -->
+
+            <th class="tg-0lax">
+              <span style="font-weight: bold">Ville de naissance</span>
+            </th>
             <th class="tg-0lax">
               <span style="font-weight: bold">N° électeur</span>
             </th>
@@ -42,13 +45,15 @@
             <td class="tg-0lax">{{ citoyen.Nom }}</td>
             <td class="tg-0lax">{{ citoyen.Prenom }}</td>
             <td class="tg-0lax">{{ citoyen.DateNaissance }}</td>
-            <!-- <td class="tg-0lax">{{citoyen.LieuNaissance}}</td> -->
+            <td class="tg-0lax">
+              {{ citoyen.NomVille }} {{ citoyen.CodePostal }}
+            </td>
             <td class="tg-0lax">{{ citoyen.NumeroElecteur }}</td>
             <td class="tg-0lax">{{ citoyen.NumeroPasseport }}</td>
             <td class="tg-0lax">{{ citoyen.NumeroIdentite }}</td>
             <td class="tg-zv4m">
               <div>
-                <button @click="updateCitoyen(citoyen)">Modifier</button>
+                <button @click="fillUpdateCitoyen(citoyen)">Modifier</button>
                 <button @click="deleteCitoyen(citoyen)">Supprimer</button>
               </div>
             </td>
@@ -57,7 +62,7 @@
       </table>
     </div>
 
-    <form @submit.prevent="addCitoyen" id="myform">
+    <form id="myform">
       <input
         type="text"
         v-model="newCitoyen.nom"
@@ -81,7 +86,24 @@
         v-model="newCitoyen.lieu_naissance"
         placeholder="Ville de naissance"
         class="input-text"
+        @click="handleClickInput()"
+        @focus="handleClickInput()"
       /><br />
+      <div v-if="searching">
+        <table class="table">
+          <tbody>
+            <tr
+              v-for="(ville, index) in filteredVille"
+              v-if="index < 10"
+              @click="handleClickVille(ville)"
+              :key="ville.IdVille"
+            >
+              <td>{{ ville.NomVille }}</td>
+              <td>{{ ville.CodePostal }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <input
         type="text"
         v-model="newCitoyen.numero_electeur"
@@ -100,7 +122,15 @@
         placeholder="Numéro passport"
         class="input-text"
       /><br />
-      <button type="submit" class="btn-default">Ajouter</button>
+      <button v-if="!modifyng" @click="addCitoyen()" class="btn-default">
+        Ajouter
+      </button>
+      <button v-if="modifyng" @click="updateCitoyen()" class="btn-default">
+        Modifier
+      </button>
+      <button v-if="modifyng" @click="handleAnnulerClick()" class="btn-default">
+        Annuler
+      </button>
     </form>
   </div>
 </template>
@@ -109,6 +139,7 @@
 module.exports = {
   data() {
     return {
+      listeVille: [],
       newCitoyen: {
         nom: "",
         prenom: "",
@@ -121,21 +152,36 @@ module.exports = {
       },
       loading: true,
       error: null,
-      listeElectorale: [],
       currentAdmin: [],
+      searching: false,
+      modifyng: false,
     };
   },
   methods: {
+    async fetchVille() {
+      this.error = this.listeVille = null;
+      try {
+        const res = await axios.get("/api/getville");
+        this.listeVille = res.data;
+        this.loading = false;
+      } catch (er) {
+        this.error = er;
+      }
+    },
+    selectVille(ville) {
+      this.lieu_naissance = ville.NomVille;
+    },
     addCitoyen() {
       this.$emit("addcitoyen", this.newCitoyen);
       document.getElementById("myform").reset();
     },
-    async fetchData() {
+    async fetchListeElectorale() {
       this.error = this.listeelectorale = null;
       try {
         const res = await axios.post("/api/listeelectorale", this.currentAdmin);
         this.listeelectorale = res.data;
         this.loading = false;
+        console.log(this.listeelectorale);
       } catch (er) {
         this.error = er;
       }
@@ -143,20 +189,67 @@ module.exports = {
     deleteCitoyen(citoyen) {
       this.$emit("deletecitoyen", citoyen);
     },
-    updateCitoyen(citoyen) {
-      console.log("Citoyen to update :", citoyen);
+    fillUpdateCitoyen(citoyen) {
+      let date = citoyen.DateNaissance.substring(0, 10);
+      this.newCitoyen.nom = citoyen.Nom;
+      this.newCitoyen.prenom = citoyen.Prenom;
+      this.newCitoyen.date_naissance = date;
+      this.newCitoyen.lieu_naissance = citoyen.NomVille;
+      this.newCitoyen.numero_electeur = citoyen.NumeroElecteur;
+      this.newCitoyen.numero_carte_id = citoyen.NumeroIdentite;
+      this.newCitoyen.numero_passeport = citoyen.NumeroPasseport;
+      this.modifyng = true;
+    },
+    updateCitoyen() {
+      console.log(this.citoyen);
+      this.$emit("updatecitoyen", this.newCitoyen);
+    },
+    handleClickInput() {
+      this.searching = true;
+    },
+    handleClickVille(ville) {
+      this.newCitoyen.lieu_naissance = ville.NomVille;
+      this.searching = false;
+    },
+    handleAnnulerClick() {
+      (this.newCitoyen.nom = ""),
+        (this.newCitoyen.prenom = ""),
+        (this.newCitoyen.date_naissance = ""),
+        (this.newCitoyen.lieu_naissance = ""),
+        (this.newCitoyen.numero_electeur = ""),
+        (this.newCitoyen.numero_carte_id = ""),
+        (this.newCitoyen.numero_passeport = ""),
+        (this.newCitoyen.lieu_domicile = ""),
+        document.getElementById("myform").reset();
+      this.modifyng = false;
+    },
+  },
+  computed: {
+    filteredVille() {
+      if (this.listeVille != null) {
+        return this.listeVille.filter((p) => {
+          return (
+            p.NomVille.toLowerCase().indexOf(
+              this.newCitoyen.lieu_naissance.toLowerCase()
+            ) != -1
+          );
+        });
+      }
     },
   },
   async created() {
     this.currentAdmin = JSON.parse(localStorage.getItem("admin"));
     this.newCitoyen.lieu_domicile = this.currentAdmin.IdVille;
-    this.fetchData();
+    this.fetchListeElectorale();
+    this.fetchVille();
   },
 };
 </script>
 
 <style>
 .container {
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
@@ -228,5 +321,15 @@ module.exports = {
   text-align: left;
   vertical-align: top;
   padding-left: 30px;
+}
+
+.table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+tr:hover {
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

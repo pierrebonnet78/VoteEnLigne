@@ -19,16 +19,19 @@
               <div class="red"></div>
               <!-- <img src="../assets/header.png" alt="image"></img> -->
           </div>
+          
 
             <router-view
             :livres="livres"
             :currentuser="currentuser"
-            :listeelectorale ="listeelectorale"
+            :villeselected="villeselected"
+            @setvilleselected="setvilleSelected"
             @loginadmin="loginAdmin"
             @inscription="inscriptionUser"
             @addpanier="addPanier"
             @deletelivre="deleteLivre"
             @addcitoyen="addCitoyen"
+            @updatecitoyen="updateCitoyen"
             @deletelpanier="deleteLPanier"
             @validatepanier="validatePanier"
             @refreshuser="refreshUser"
