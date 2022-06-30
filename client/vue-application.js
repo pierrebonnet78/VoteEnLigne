@@ -24,6 +24,7 @@ var app = new Vue({
     livres: [],
     currentuser: [],
     listeelectorale: [],
+    villeselected: null,
   },
   async mounted() {
     //const res = await axios.get('/api/livres')
@@ -63,6 +64,9 @@ var app = new Vue({
         router.push("/catalogue");
       }
     },
+    async setvilleSelected(ville) {
+      this.$data.villeselected = ville;
+    },
     async inscriptionUser(user) {
       const res = await axios.post("/api/inscription", user);
 
@@ -96,10 +100,23 @@ var app = new Vue({
       this.$data.livres = res2.data;
     },
     async addCitoyen(citoyen) {
+      console.log(citoyen);
       const res = await axios.post("api/addCitoyen", citoyen);
       console.log(res);
       if (res.data[0] == 400) {
-        alert("Erreur dans la saisie");
+        alert("Erreur dans la saisie ajout");
+      }
+    },
+    async updateCitoyen(citoyen) {
+      console.log(citoyen);
+      const res = await axios.post("api/updateCitoyen", citoyen);
+      console.log("response :");
+      console.log(res);
+      if (res.data[0] == 400) {
+        alert("Erreur dans la saisie update");
+      }
+      if (res.data[0] == 401) {
+        alert("Erreurr récupération id ville");
       }
     },
     async deleteLPanier(object) {
