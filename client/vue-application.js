@@ -5,12 +5,14 @@ const Panier = window.httpVueLoader("./components/Panier.vue");
 const Temp = window.httpVueLoader("./components/Temp.vue");
 const Home = window.httpVueLoader("./components/Home.vue");
 const AdminPage = window.httpVueLoader("./components/AdminPage.vue");
+const UserPage = window.httpVueLoader("./components/UserPage.vue");
 
 const routes = [
   { path: "/", component: Home },
   { path: "/LoginUser", component: LoginUser },
   { path: "/AdminLogin", component: AdminLogin },
   { path: "/AdminPage", component: AdminPage },
+  { path: "/UserPage", component: UserPage },
 ];
 
 const router = new VueRouter({
@@ -45,24 +47,32 @@ var app = new Vue({
         router.push("/AdminPage");
       }
     },
-    async loginUser(user) {
-      const res = await axios.post("/api/loginUser", user);
-      if (res.data[0] == -1) {
-        alert("Mot de passe incorrect");
-      } else if (res.data[0] == 0) {
-        alert("Email incorrect");
-      } else {
-        alert("Connexion réussie");
-        this.$data.currentuser = res.data[1];
-        const res2 = await axios.post(
-          "/api/listeelectorale",
-          this.$data.currentuser[0]
-        );
-        console.log(res2);
-        this.$data.listeelectorale = res2.data;
+    async loginUser(citoyen) {
+      const res = await axios.post("/api/loginUser", citoyen);
 
-        router.push("/catalogue");
+      if (res.data[0] == 400) {
+        alert("Ce compte n'existe pas");
+      } else if (res.data[0] == 200) {
+        localStorage.citoyen = JSON.stringify(res.data[1][0]);
+        router.push("/UserPage");
       }
+
+      // if (res.data[0] == -1) {
+      //   alert("Mot de passe incorrect");
+      // } else if (res.data[0] == 0) {
+      //   alert("Email incorrect");
+      // } else {
+      //   alert("Connexion réussie");
+      //   this.$data.currentuser = res.data[1];
+      //   const res2 = await axios.post(
+      //     "/api/listeelectorale",
+      //     this.$data.currentuser[0]
+      //   );
+      //   console.log(res2);
+      //   this.$data.listeelectorale = res2.data;
+
+      //   router.push("/catalogue");
+      // }
     },
     async setvilleSelected(ville) {
       this.$data.villeselected = ville;
@@ -113,10 +123,7 @@ var app = new Vue({
       console.log("response :");
       console.log(res);
       if (res.data[0] == 400) {
-        alert("Erreur dans la saisie update");
-      }
-      if (res.data[0] == 401) {
-        alert("Erreurr récupération id ville");
+        alert("Erreur dans la saisie");
       }
     },
     async deleteLPanier(object) {

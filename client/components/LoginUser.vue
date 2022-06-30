@@ -5,53 +5,61 @@
       <div id="input-grp">
         <input
           type="text"
-          v-model="user.nom"
+          v-model="citoyen.nom"
           placeholder="Nom"
           required
           class="form-control"
         />
         <input
           type="text"
-          v-model="user.prenom"
+          v-model="citoyen.prenom"
           placeholder="Prénom"
           required
           class="form-control"
         />
         <input
           type="date"
-          v-model="user.dateNaissance"
+          v-model="citoyen.date_naissance"
           placeholder="Date de naissance"
           required
           class="form-control"
         />
         <input
           type="text"
-          v-model="user.numElecteur"
-          placeholder="Numéro d'électeur"
+          v-model="citoyen.lieu_naissance"
+          placeholder="Lieu de naissance"
           required
           class="form-control"
         />
         <input
           type="text"
-          v-model="user.numPasseport"
+          v-model="citoyen.numero_electeur"
+          placeholder="Numéro d'électeur"
+          required
+          class="form-control"
+        />
+        <p>Choissiez votre méthode d'indentification : </p>
+        <button @click="handlePasseportClick()"> Numéro de passeport </button>
+        <button @click="handleIdClick()"> Numéro de carte d'identité </button>
+        <br>
+        
+        <input
+          type="text"
+          v-if="connectionWithPasseport"
+          v-model="citoyen.numero_passeport"
           placeholder="Numéro de passeport"
           required
           class="form-control"
         />
         <input
           type="text"
-          v-model="user.numID"
+          v-if="connectionWithId"
+          v-model="citoyen.numero_carte_id"
           placeholder="Numéro d'identité"
           required
           class="form-control"
         />
-        <input
-          type="text"
-          v-model="user.lieuNaissance"
-          placeholder="Lieu de naissance"
-          required
-          class="form-control"
-        />
+        
       </div>
 
       <div id="btn-grp">
@@ -68,22 +76,41 @@ module.exports = {
   },
   data() {
     return {
-      user: {
-        nom: "",
+      citoyen: {
+         nom: "",
         prenom: "",
-        dateNaissance: "",
-        numElecteur: "",
-        numPasseport: "",
-        numID: "",
-        lieuNaissance: "",
+        date_naissance: "",
+        lieu_naissance: "",
+        numero_electeur: "",
+        numero_carte_id: "",
+        numero_passeport: "",
+        id_lieu_domicile: "",
+        connection_type : ""  // 0 : numéro passeport, 1 : numéro Id
       },
+      connectionWithPasseport : false,
+      connectionWithId : false,
     };
   },
   methods: {
     loginUser() {
-      //this.$emit("loginUser", this.user);
+        this.citoyen.id_lieu_domicile = this.villeselected.IdVille
+        this.$emit("loginuser", this.citoyen);
       
     },
+    handlePasseportClick(){
+        this.connectionWithPasseport = !this.connectionWithPasseport;
+        this.citoyen.connection_type = 0;
+        if(this.connectionWithId){
+            this.connectionWithId = false
+        }
+    },
+    handleIdClick(){
+        this.connectionWithId = !this.connectionWithId;
+        this.citoyen.connection_type = 1;
+         if(this.connectionWithPasseport){
+            this.connectionWithPasseport = false
+        }
+    }
   },
   created() {
     if(!this.villeselected){

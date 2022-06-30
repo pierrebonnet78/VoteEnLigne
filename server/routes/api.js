@@ -7,7 +7,7 @@ const mysql = require("mysql");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Emma2001",
+  password: "password",
   database: "voteenlignedb",
 });
 
@@ -97,33 +97,71 @@ router.post("/loginAdmin", (req, res) => {
 });
 
 router.post("/loginUser", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const nom = req.body.nom;
+  const prenom = req.body.prenom;
+  const date_naissance = req.body.date_naissance;
+  const lieu_naissance = req.body.lieu_naissance;
+  const numero_electeur = req.body.numero_electeur;
+  const numero_carte_id = req.body.numero_carte_id;
+  const numero_passeport = req.body.numero_passeport;
+  const id_lieu_domicile = req.body.id_lieu_domicile;
+  const connection_type = req.body.connection_type;
 
-  //verifie si le compte est dans la bdd
-
-  var sql = "SELECT * FROM Citoyen c where c.email = '" + email + "'";
+  var sql =
+    "SELECT IdVille FROM Ville where NomVille ='" + lieu_naissance + "';";
 
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
-    if (result.length != 0) {
-      //email present dans la bdd
-      //verifie si le mdp est bon
-
-      let compare = bcrypt.compareSync(password, result[0].MotDePasseAdmin);
-      if (compare && result[0].MotDePasseAdmin) {
-        //le mdp est bon
-        req.session.currentuser = result;
-        //console.log(req.session)
-        res.json([1, req.session.currentuser]);
-      } else {
-        //le mdp n'est pas bon
-        res.json([-1, undefined]);
-      }
-    } else {
-      //email pas present dans la bdd
-      res.json([0, undefined]);
+    if (result.length === 0) {
+      res.json([400, undefined]);
+      return;
     }
+    if (connection_type) {
+      var sql2 =
+        "SELECT * FROM Citoyen c where c.Nom='" +
+        nom +
+        "' and c.Prenom='" +
+        prenom +
+        "' and c.DateNaissance='" +
+        date_naissance +
+        "' and c.IdVilleNaissance='" +
+        result[0].IdVille +
+        "' and c.IdVilleDomicile=" +
+        id_lieu_domicile +
+        " and c.NumeroElecteur =" +
+        numero_electeur +
+        " and c.NumeroIdentite='" +
+        numero_carte_id +
+        "';";
+    } else {
+      var sql2 =
+        "SELECT * FROM Citoyen c where c.Nom='" +
+        nom +
+        "' and c.Prenom='" +
+        prenom +
+        "' and c.DateNaissance='" +
+        date_naissance +
+        "' and c.IdVilleNaissance='" +
+        result[0].IdVille +
+        "' and c.IdVilleDomicile=" +
+        id_lieu_domicile +
+        " and c.NumeroPasseport =" +
+        numero_passeport +
+        " and c.NumeroElecteur =" +
+        numero_electeur +
+        ";";
+    }
+
+    console.log(sql2);
+    db.query(sql2, function (err, result2, fields) {
+      if (err) throw err;
+
+      if (result2.length == 0) {
+        res.json([400, undefined]);
+        return;
+      }
+      res.json([200, result2]);
+    });
   });
 });
 
@@ -225,17 +263,13 @@ router.post("/addCitoyen", (req, res) => {
       res.json([400, undefined]);
       return;
     }
-    //var sql2 = "SELECT IdVille from Ville where Nom ='" + lieu_domicile + "';";
-    //db.query(sql2, function (err, result2, fields) {
     var sql3 =
-      "Insert into Citoyen (Nom,Prenom,NomParti,DateNaissance,NumeroElecteur,NumeroPasseport,NumeroIdentite,IdVilleNaissance,IdVilleDomicile) " +
+      "Insert into Citoyen (Nom,Prenom,DateNaissance,NumeroElecteur,NumeroPasseport,NumeroIdentite,IdVilleNaissance,IdVilleDomicile) " +
       "VALUES ('" +
       nom +
       "','" +
       prenom +
-      "'," +
-      null +
-      ",'" +
+      "','" +
       date_naissance +
       "'," +
       numero_electeur +
@@ -265,6 +299,7 @@ router.post("/updateCitoyen", (req, res) => {
   const numero_carte_id = req.body.numero_carte_id;
   const numero_passeport = req.body.numero_passeport;
   const id_lieu_domicile = req.body.lieu_domicile;
+  const id_citoyen = req.body.id_citoyen;
 
   // vérification de la validité des données d'entrée
   if (
@@ -281,7 +316,7 @@ router.post("/updateCitoyen", (req, res) => {
     // typeof date_naissance !== "string" ||
     isNaN(numero_electeur)
   ) {
-    res.json([401, undefined]);
+    res.json([400, undefined]);
     return;
   }
   var sql =
@@ -293,32 +328,30 @@ router.post("/updateCitoyen", (req, res) => {
       res.json([400, undefined]);
       return;
     }
-    //var sql2 = "SELECT IdVille from Ville where Nom ='" + lieu_domicile + "';";
-    //db.query(sql2, function (err, result2, fields) {
     var sql3 =
       "Update citoyen c set c.Nom='" +
       nom +
-      "' c.Prenom ='" +
+      "' , c.Prenom='" +
       prenom +
-      "' c.DateNaissance ='" +
+      "' , c.DateNaissance='" +
       date_naissance +
-      "' c.NumeroElecteur =" +
+      "' , c.NumeroElecteur=" +
       numero_electeur +
-      " c.NumeroPasseport='" +
+      " , c.NumeroPasseport='" +
       numero_passeport +
-      "' c.NumeroIdentite='" +
+      "' , c.NumeroIdentite='" +
       numero_carte_id +
-      "' c.IdVilleNaissance=" +
+      "' , c.IdVilleNaissance=" +
       result[0].IdVille +
-      " c.IdVilleDomicile=" +
+      " , c.IdVilleDomicile=" +
       id_lieu_domicile +
-      " where c.IdCitoyen=2" +
+      " where c.IdCitoyen=" +
+      id_citoyen +
       ";";
     db.query(sql3, function (err, result, fields) {
       if (err) throw err;
     });
     res.json("Citoyen Updaté");
-    //});
   });
 });
 

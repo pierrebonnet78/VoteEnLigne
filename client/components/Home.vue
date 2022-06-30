@@ -81,7 +81,7 @@ module.exports = {
       }
     },
     selectVille(ville) {
-      this.searchText = ville.Nom;
+      this.searchText = ville.NomVille;
 
       this.$emit("setvilleselected", ville);
       //this.villeselected = ville;

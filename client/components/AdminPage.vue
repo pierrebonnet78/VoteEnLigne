@@ -149,6 +149,7 @@ module.exports = {
         numero_carte_id: "",
         numero_passeport: "",
         lieu_domicile: "",
+        id_citoyen: "",
       },
       loading: true,
       error: null,
@@ -190,6 +191,7 @@ module.exports = {
       this.$emit("deletecitoyen", citoyen);
     },
     fillUpdateCitoyen(citoyen) {
+      console.log(citoyen.IdCitoyen);
       let date = citoyen.DateNaissance.substring(0, 10);
       this.newCitoyen.nom = citoyen.Nom;
       this.newCitoyen.prenom = citoyen.Prenom;
@@ -198,11 +200,22 @@ module.exports = {
       this.newCitoyen.numero_electeur = citoyen.NumeroElecteur;
       this.newCitoyen.numero_carte_id = citoyen.NumeroIdentite;
       this.newCitoyen.numero_passeport = citoyen.NumeroPasseport;
+      this.newCitoyen.id_citoyen = citoyen.IdCitoyen;
       this.modifyng = true;
     },
     updateCitoyen() {
       console.log(this.citoyen);
       this.$emit("updatecitoyen", this.newCitoyen);
+      (this.newCitoyen.nom = ""),
+        (this.newCitoyen.prenom = ""),
+        (this.newCitoyen.date_naissance = ""),
+        (this.newCitoyen.lieu_naissance = ""),
+        (this.newCitoyen.numero_electeur = ""),
+        (this.newCitoyen.numero_carte_id = ""),
+        (this.newCitoyen.numero_passeport = ""),
+        (this.newCitoyen.lieu_domicile = ""),
+        document.getElementById("myform").reset();
+      this.modifyng = false;
     },
     handleClickInput() {
       this.searching = true;
