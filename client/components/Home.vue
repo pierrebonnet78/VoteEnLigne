@@ -8,7 +8,7 @@
         <!-- <router-link to="/LoginUser" class="btn-default"
           >Sélectionner une commune</router-link
         > -->
-        <button @click="handleClick()">Séléctionner votre commune</button>
+        <button @click="handleClick()">Sélectionner votre commune</button>
       </div>
 
       <div v-if="loading" class="loading">
@@ -36,6 +36,7 @@
         </div>
       </div>
     </div>
+    <br> <br/>
     <button>
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
       <router-link to="/AdminLogin">Connexion Admin</router-link>
