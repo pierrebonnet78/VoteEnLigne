@@ -53,8 +53,8 @@
             <td class="tg-0lax">{{ citoyen.NumeroIdentite }}</td>
             <td class="tg-zv4m">
               <div>
-                <button @click="fillUpdateCitoyen(citoyen)">Modifier</button>
-                <button @click="deleteCitoyen(citoyen)">Supprimer</button>
+                <button @click="fillUpdateCitoyen(citoyen)">✏️</button>
+                <button @click="deleteCitoyen(citoyen)">❌</button>
               </div>
             </td>
           </tr>
