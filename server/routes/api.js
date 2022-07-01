@@ -392,6 +392,14 @@ router.get("/getville", (req, res) => {
   });
 });
 
+router.get("/listeElection", (req, res) => {
+  var sql = "Select * from election;";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
 router.post("/deletelpanier", (req, res) => {
   const livreId = req.body.livreid;
   const userId = req.body.userid;
