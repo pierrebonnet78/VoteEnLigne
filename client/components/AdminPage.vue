@@ -107,19 +107,19 @@
       <input
         type="text"
         v-model="newCitoyen.numero_electeur"
-        placeholder="Numéro d'élécteur"
+        placeholder="Numéro d'électeur"
         class="input-text"
       /><br />
       <input
         type="text"
         v-model="newCitoyen.numero_carte_id"
-        placeholder="Numéro carte Identité"
+        placeholder="Numéro carte identité"
         class="input-text"
       /><br />
       <input
         type="text"
         v-model="newCitoyen.numero_passeport"
-        placeholder="Numéro passport"
+        placeholder="Numéro passeport"
         class="input-text"
       /><br />
       <button v-if="!modifyng" @click="addCitoyen()" class="btn-default">
@@ -276,8 +276,8 @@ module.exports = {
   margin-top: 20px;
 }
 .input-text {
-  background: rgb(190, 189, 189);
-  border: 0;
+  background: rgb(252, 252, 252);
+  border: 1px solid rgb(0, 0, 0);
   font-size: 18px;
   margin-top: 15px;
 }
