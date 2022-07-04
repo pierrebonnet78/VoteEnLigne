@@ -76,8 +76,8 @@ form {
 }
 
 .body .form-control {
-  background: rgb(190, 189, 189);
-  border: 0;
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0);
   font-size: 18px;
 }
 .body .form-control::-webkit-input-placeholder {

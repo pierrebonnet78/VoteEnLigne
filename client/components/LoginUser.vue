@@ -1,5 +1,5 @@
 <template>
-  <div class="body" v-if="villeselected">
+  <div class="body" style="text-align: center;" v-if="villeselected">
     <h1>Portail Electeur ville de {{villeselected.NomVille}} </h1>
     <form>
       <div id="input-grp">
@@ -38,7 +38,7 @@
           required
           class="form-control"
         />
-        <p>Choissiez votre méthode d'indentification : </p>
+        <p>Choisissez votre méthode d'indentification : </p>
         <button @click="handlePasseportClick()"> Numéro de passeport </button>
         <button @click="handleIdClick()"> Numéro de carte d'identité </button>
         <br>
@@ -62,7 +62,7 @@
         
       </div>
 
-      <div id="btn-grp">
+      <div id="btn-grp" style= "margin-top: 10px;" >
         <button @click="loginUser()" class="btn-default">Connexion</button>
       </div>
     </form>
@@ -121,12 +121,13 @@ module.exports = {
 </script>
 
 <style scoped
-.body h1 {
+h1 {
+  text-align: center;
   font-family: "Open sans", Arial;
   font-size: 40px;
   font-weight: bold;
-  text-align: center;
   text-decoration: underline;
+  display: flex;
 }
 
 form {
@@ -134,11 +135,16 @@ form {
 }
 
 #btn-grp {
-  margin-top: 60px;
+  margin-top: 600px;
 }
 
 #input-grp {
   margin-top: 50px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
 }
 
 .btn-default {
@@ -150,10 +156,14 @@ form {
   padding: 12px 36px;
 }
 
-.body .form-control {
+.form-control {
   background: rgb(190, 189, 189);
   border: 0;
   font-size: 18px;
+  text-align: center;
+  display: flex;
+  position: relative;
+  margin-top: 20px;
 }
 .body .form-control::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.342);
