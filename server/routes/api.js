@@ -7,7 +7,7 @@ const mysql = require("mysql");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Emma2001",
+  password: "password",
   database: "voteenlignedb",
 });
 
@@ -151,8 +151,6 @@ router.post("/loginUser", (req, res) => {
         numero_electeur +
         ";";
     }
-
-    console.log(sql2);
     db.query(sql2, function (err, result2, fields) {
       if (err) throw err;
 
@@ -392,53 +390,23 @@ router.get("/getville", (req, res) => {
   });
 });
 
-router.get("/listeElection", (req, res) => {
-  var sql = "Select * from election;";
+router.post("/getCandidats", (req, res) => {
+  const IdElection = req.body.IdElection;
+
+  var sql =
+    "Select * from candidat where IdElectionCandidature = " + IdElection;
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(result);
   });
 });
 
-router.post("/deletelpanier", (req, res) => {
-  const livreId = req.body.livreid;
-  const userId = req.body.userid;
-
-  //supprime de la table panier le livre correspond à l'user
-  db.query(
-    "DELETE FROM panier p WHERE p.id_livre = " +
-      livreId +
-      " and p.id_user = " +
-      userId,
-    function (err, result, fields) {
-      if (err) throw err;
-      res.json(true);
-    }
-  );
-});
-
-router.post("/validatepanier", (req, res) => {
-  const userId = req.body.userid;
-
-  //-1 à la quantity des livres qui sont dans le panier
-  var sql =
-    "UPDATE livres l INNER JOIN panier p on p.id_livre = l.id_livre SET l.quantity = l.quantity - 1 WHERE p.id_user = " +
-    userId;
+router.get("/getElection", (req, res) => {
+  var sql = "Select * from election where Actif=true;";
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
+    res.json(result);
   });
-  //vide le panier de l'user
-  db.query(
-    "DELETE FROM panier p WHERE p.id_user = " + userId,
-    function (err, result, fields) {
-      if (err) throw err;
-      res.json(true);
-    }
-  );
-});
-
-router.get("/user", (req, res) => {
-  res.json(req.session.currentuser);
 });
 
 router.post("/deletecitoyen", (req, res) => {
