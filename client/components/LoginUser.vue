@@ -144,7 +144,6 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 18px;
 }
 
 .btn-default {
@@ -159,7 +158,7 @@ form {
 .form-control {
   background: rgb(190, 189, 189);
   border: 0;
-  font-size: 18px;
+  font-size: 20px;
   text-align: center;
   display: flex;
   position: relative;

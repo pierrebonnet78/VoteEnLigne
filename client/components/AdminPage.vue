@@ -291,6 +291,7 @@ module.exports = {
   margin: auto;
 }
 
+
 .tg {
   border-collapse: collapse;
   border-spacing: 0;
