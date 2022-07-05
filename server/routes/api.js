@@ -145,9 +145,9 @@ router.post("/loginUser", (req, res) => {
         result[0].IdVille +
         "' and c.IdVilleDomicile=" +
         id_lieu_domicile +
-        " and c.NumeroPasseport =" +
+        " and c.NumeroPasseport ='" +
         numero_passeport +
-        " and c.NumeroElecteur =" +
+        "' and c.NumeroElecteur =" +
         numero_electeur +
         ";";
     }
@@ -163,65 +163,14 @@ router.post("/loginUser", (req, res) => {
   });
 });
 
-router.get("/livres", (req, res) => {
-  db.query("SELECT * FROM livres", function (err, result, fields) {
+router.post("/refreshUser", (req, res) => {
+  const IdCitoyen = req.body.IdCitoyen;
+
+  var sql = "Select * from citoyen where IdCitoyen = " + IdCitoyen;
+  db.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(result);
   });
-});
-
-router.post("/addpanier", (req, res) => {
-  const userId = req.body.userid;
-  const livreId = req.body.livreid;
-
-  //verifie si le livre n'est pas déja dans le panier
-  db.query(
-    "SELECT * FROM panier p where p.id_user = " +
-      userId +
-      " and p.id_livre = " +
-      livreId,
-    function (err, result, fields) {
-      if (err) throw err;
-
-      if (result.length == 0) {
-        //livre pas dans le panier de l'user
-        //on rajoute le livre dans le panier de l'user
-        db.query(
-          "INSERT INTO panier (id_user,id_livre) VALUES(" +
-            userId +
-            "," +
-            livreId +
-            ")",
-          function (err, result, fields) {
-            if (err) throw err;
-            res.json(true);
-          }
-        );
-      } else {
-        //livre déjà dans le panier de l'user
-        res.json(false);
-      }
-    }
-  );
-});
-
-router.post("/deletelivre", (req, res) => {
-  const livreId = req.body.livreid;
-  //supprime le livre de la table panier
-  db.query(
-    "DELETE FROM panier p WHERE p.id_livre = " + livreId,
-    function (err, result, fields) {
-      if (err) throw err;
-    }
-  );
-  //supprime le livre de la table livres
-  db.query(
-    "DELETE FROM livres l WHERE l.id_livre = " + livreId,
-    function (err, result, fields) {
-      if (err) throw err;
-      res.json(true);
-    }
-  );
 });
 
 router.post("/addCitoyen", (req, res) => {
@@ -374,14 +323,6 @@ router.post("/listeelectorale", (req, res) => {
   });
 });
 
-router.get("/listeelectoralev2", (req, res) => {
-  var sql = "select * from citoyen where citoyen.IdVilleDomicile = 1;";
-  db.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.json(result);
-  });
-});
-
 router.get("/getville", (req, res) => {
   var sql = "Select * from Ville ORDER BY CodePostal;";
   db.query(sql, function (err, result, fields) {
@@ -415,6 +356,21 @@ router.post("/deletecitoyen", (req, res) => {
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(true);
+  });
+});
+
+router.post("/vote", (req, res) => {
+  const IdCitoyen = req.body.citoyen.IdCitoyen;
+  const IdCandidat = req.body.candidat.IdCandidat;
+
+  var sql = "UPDATE Citoyen set a_vote = true where IdCitoyen =" + IdCitoyen;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+  });
+  sql = "UPDATE Candidat SET NbVote = NbVote+1 where IdCandidat =" + IdCandidat;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json("Vote enregistré");
   });
 });
 

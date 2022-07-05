@@ -9,10 +9,27 @@
       <h4>Date : {{ dayElection }} 🗓️</h4>
       <h4>Ouverture des votes : {{ debutElection }} 📭</h4>
       <h4>Fermeture des votes : {{ finElection }} 📪</h4>
-
       <h2 v-if="!isJourDeVote">⌚ Vous ne pouvez pas encore voter ⌚</h2>
       <h2 v-if="isJourDeVote == 2">📫 Les votes sont fermés 📫</h2>
-      <div v-if="isJourDeVote == 1" class="container">
+      <div v-if="isChoiceMade" class="choice">
+        <div>
+          <p>
+            Vous êtes sur le point de voter pour &nbsp
+            <p id="bold"> {{ choiceCandidat.PrenomCandidat }} {{ choiceCandidat.NomCandidat }}</p>
+          </p>
+          <p>
+            Pour confirmer votre choix, entrez "confirmer mon choix" ci-dessous
+          </p>
+        </div>
+        <div>
+          <input type="text" v-model="confirmChoice" placeholder="Confirmer mon choix"/>
+        </div>
+        <div>
+          <button @click="handleCancel()">❌</button>
+          <button @click="handleValidate()" v-if="confirmChoice == 'Confirmer mon choix'">✅</button>
+        </div>
+      </div>
+      <div v-if="isJourDeVote == 1 && user.a_vote == null" class="container">
         <h2>🗳️ Les votes sont ouverts 🗳️</h2>
         <h2>Votez pour votre candidat en cliquant sur celui-ci.</h2>
         <div class="liste-candidat">
@@ -20,10 +37,17 @@
             v-for="candidat in listeCandidat"
             :key="candidat.IdCandidat"
             class="candidat"
+            @click="handleClick(candidat)"
           >
-            <p>{{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }}</p>
+            <p id="bold">{{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }}</p>
             <img :src="getUrlPhoto(candidat)" class="img" />
           </div>
+        </div>
+      </div>
+      <div v-if="isJourDeVote == 1 && user.a_vote" class="container-stat">
+        <h2 >🗳️ Vous avez déjà voté 🗳️</h2>
+        <div>
+          <button @click="handleStats()">📊 Accès aux statistiques</button>
         </div>
       </div>
     </div>
@@ -32,6 +56,9 @@
 
 <script>
 module.exports = {
+  // props: {
+  //   electionstats: { type: Object, default: {} },
+  // },
   data() {
     return {
       user: {},
@@ -41,8 +68,11 @@ module.exports = {
       dayElection: "",
       debutElection: "",
       finElection: "",
-      isJourDeVote: "", // 0 : vote note yet passed, 1 : vote in progress, 2 : vote passed
+      isJourDeVote: "", // 0 : vote note yet passed, 1 : vote in progress, 2 : vote passed, 3 : already vote
       listeCandidat: [],
+      isChoiceMade: false,
+      choiceCandidat: {},
+      confirmChoice : ""
     };
   },
   methods: {
@@ -75,17 +105,14 @@ module.exports = {
       this.finElection = this.finElection.replaceAll("-", "/");
 
       // get candidates list
-      console.log(this.election);
       try {
         const res = await axios.post("/api/getCandidats", this.election[0]);
         this.listeCandidat = res.data;
-        console.log(this.listeCandidat);
         this.loading = false;
       } catch (error) {
         this.error = error;
         return;
       }
-
       return;
     },
     checkDate() {
@@ -101,21 +128,59 @@ module.exports = {
       } else if (currentDate < this.debutElection) {
         this.isJourDeVote = 0; // vote not yet passed
       } else {
-        this.isJourDeVote = 2; // vote passed
+        if(this.user.a_vote == true){
+          isJourDeVote = 3 //already vote
+        }
+        else{
+          this.isJourDeVote = 2; // vote passed
+        }
+        
       }
     },
     getUrlPhoto(candidat) {
-      console.log(candidat.UrlPhoto);
       return candidat.UrlPhoto;
     },
+    handleClick(candidat) {
+      this.isChoiceMade = true;
+      this.choiceCandidat = candidat;
+      window.scrollTo(0, 0);
+    },
+    handleCancel() {
+      this.isChoiceMade = false;
+    },
+    async handleValidate(){
+      this.$emit("vote", this.user, this.choiceCandidat);
+      this.isChoiceMade = false;
+
+      try {
+        const res = await axios.post("/api/refreshUser", this.user);
+        this.user = res.data[0];
+        console.log("response :")
+        console.log(res)
+      } catch (er) {
+        this.error = er;
+      }
+      
+      this.confirmChoice = "";
+    },
+    refreshUser(){
+      console.log(this.user)
+      this.$emit("refreshuser", this.user);
+      this.user = JSON.parse(localStorage.getItem("citoyen"));
+      this.user = JSON.parse(localStorage.getItem("citoyen"));
+    },
+    handleStats(){
+      //router.push("/Stats")
+    }
   },
   async created() {
     this.user = JSON.parse(localStorage.getItem("citoyen"));
+    console.log("created")
+    console.log(this.user)
     this.fetchData();
   },
   beforeUpdate() {
     this.checkDate();
-    console.log("jour de vote ", this.isJourDeVote);
   },
 };
 </script>
@@ -158,16 +223,57 @@ module.exports = {
 .candidat {
   flex: 0 1 25%;
   border-radius: 10px;
-  background-color: #5873e7;
+  background-color: #7e91e2;
   margin-top: 60px;
   transition: 0.3s all ease-in-out;
+  box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
 }
 .candidat:hover {
   margin-top: 20px;
 }
 
+#bold {
+  font-weight: bold;
+}
 .img {
   width: 200px;
   height: 200px;
 }
+
+.choice {
+  position: relative;
+  width: 500px;
+  height: 300px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: #7e91e2;
+  border-radius: 10px;
+  flex-direction: column;
+  text-align: center;
+}
+
+button{
+ font-size : large;
+ gap: 100px
+}
+
+.container-stat{
+  max-width: auto;
+  height: auto;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align:center;
+  margin-bottom: 100px;
+}
+
+
 </style>

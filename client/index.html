@@ -22,22 +22,16 @@
           
 
             <router-view
-            :livres="livres"
             :currentuser="currentuser"
             :villeselected="villeselected"
             @setvilleselected="setvilleSelected"
             @loginadmin="loginAdmin"
             @loginuser="loginUser"
-            @inscription="inscriptionUser"
-            @addpanier="addPanier"
-            @deletelivre="deleteLivre"
             @addcitoyen="addCitoyen"
             @updatecitoyen="updateCitoyen"
-            @deletelpanier="deleteLPanier"
-            @validatepanier="validatePanier"
-            @refreshuser="refreshUser"
             @deletecitoyen="deleteCitoyen"
-            
+            @vote="vote"
+            @refreshuser="refreshUser"
             ></router-view>
           </main>
         </div>

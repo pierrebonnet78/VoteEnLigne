@@ -182,7 +182,6 @@ module.exports = {
         const res = await axios.post("/api/listeelectorale", this.currentAdmin);
         this.listeelectorale = res.data;
         this.loading = false;
-        console.log(this.listeelectorale);
       } catch (er) {
         this.error = er;
       }
@@ -191,7 +190,6 @@ module.exports = {
       this.$emit("deletecitoyen", citoyen);
     },
     fillUpdateCitoyen(citoyen) {
-      console.log(citoyen.IdCitoyen);
       let date = citoyen.DateNaissance.substring(0, 10);
       this.newCitoyen.nom = citoyen.Nom;
       this.newCitoyen.prenom = citoyen.Prenom;
@@ -204,7 +202,6 @@ module.exports = {
       this.modifyng = true;
     },
     updateCitoyen() {
-      console.log(this.citoyen);
       this.$emit("updatecitoyen", this.newCitoyen);
       (this.newCitoyen.nom = ""),
         (this.newCitoyen.prenom = ""),
