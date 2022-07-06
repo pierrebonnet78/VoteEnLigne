@@ -162,7 +162,7 @@ module.exports = {
     async fetchVille() {
       this.error = this.listeVille = null;
       try {
-        const res = await axios.get("/api/getville");
+        const res = await axios.get("/api/getVilles");
         this.listeVille = res.data;
         this.loading = false;
       } catch (er) {
@@ -290,7 +290,6 @@ module.exports = {
 .livre-content {
   margin: auto;
 }
-
 
 .tg {
   border-collapse: collapse;
