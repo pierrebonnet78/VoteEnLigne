@@ -18,7 +18,7 @@
             <p id="bold"> {{ choiceCandidat.PrenomCandidat }} {{ choiceCandidat.NomCandidat }}</p>
           </p>
           <p>
-            Pour confirmer votre choix, entrez "confirmer mon choix" ci-dessous
+            Pour confirmer votre choix, entrez "Confirmer mon choix" ci-dessous
           </p>
         </div>
         <div>

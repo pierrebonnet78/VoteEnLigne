@@ -1,5 +1,5 @@
 <template>
-  <div v-if="election" class="content">
+  <div v-if="election" class="content" style="margin-bottom: 25px">
     <h1>Statistiques de l'{{ election[0].NomElection }}</h1>
     <form>
       <div id="input-grp">
@@ -79,14 +79,15 @@
         <button @click="handleSearch()" class="btn-default">Rechercher</button>
       </div>
     </form>
-    <p>Nombre de votes total : {{ nbVoteTotal }} ✉️</p>
-    <p>Abstention : {{ abstention }} ⛔</p>
-    <p>Pourcentage d'Abstention : {{ abstentionPourcentage }} %</p>
+    <p style="margin-left: 20px">Nombre de votes total : {{ nbVoteTotal }} ✉️</p>
+    <p style="margin-left: 20px">Abstention : {{ abstention }} ⛔</p>
+    <p style="margin-left: 20px">Pourcentage d'Abstention : {{ abstentionPourcentage }} %</p>
 
     <div
       v-for="candidat in results"
       :key="candidat.IdCandidat"
       v-if="percentageCalculated && !filtreActivate"
+      style="text-align: center"
     >
       <p>
         {{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }} :
