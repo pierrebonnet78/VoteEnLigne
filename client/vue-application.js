@@ -4,6 +4,7 @@ const Temp = window.httpVueLoader("./components/Temp.vue");
 const Home = window.httpVueLoader("./components/Home.vue");
 const AdminPage = window.httpVueLoader("./components/AdminPage.vue");
 const UserPage = window.httpVueLoader("./components/UserPage.vue");
+const StatsPage = window.httpVueLoader("./components/StatsPage.vue");
 
 const routes = [
   { path: "/", component: Home },
@@ -11,6 +12,7 @@ const routes = [
   { path: "/AdminLogin", component: AdminLogin },
   { path: "/AdminPage", component: AdminPage },
   { path: "/UserPage", component: UserPage },
+  { path: "/StatsPage", component: StatsPage },
 ];
 
 const router = new VueRouter({
@@ -56,6 +58,7 @@ var app = new Vue({
       console.log(res.data);
     },
     async setvilleSelected(ville) {
+      console.log(ville);
       this.$data.villeselected = ville;
     },
     async addCitoyen(citoyen) {

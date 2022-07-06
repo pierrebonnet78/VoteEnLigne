@@ -374,4 +374,34 @@ router.post("/vote", (req, res) => {
   });
 });
 
+router.post("/getResults", (req, res) => {
+  const IdElection = req.body.IdElection;
+
+  var sql =
+    "select * from Candidat where IdElectionCandidature =" +
+    IdElection +
+    "  order by NbVote DESC";
+  console.log(sql);
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getNbVote", (req, res) => {
+  var sql = "select count(*) as nbVoteTotal from citoyen where a_vote = 1 ";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getAbsention", (req, res) => {
+  var sql = "select count(*) as nbNonVote from citoyen where a_vote = 0 ";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
 module.exports = router;

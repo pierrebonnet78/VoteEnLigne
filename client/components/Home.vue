@@ -36,7 +36,8 @@
         </div>
       </div>
     </div>
-    <br> <br/>
+    <br />
+    <br />
     <button>
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
       <router-link to="/AdminLogin">Connexion Admin</router-link>
@@ -85,7 +86,6 @@ module.exports = {
       this.searchText = ville.NomVille;
 
       this.$emit("setvilleselected", ville);
-      //this.villeselected = ville;
       router.push("LoginUser");
     },
     handleClick() {
