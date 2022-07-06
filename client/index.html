@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>E-Vote</title>
+        <link rel="icon" type="image/gif/png" href="/favicon.ico">
         <!-- Load Vue followed by Vue Router -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -17,6 +18,7 @@
                 <div class ="blue"></div>
                 <div class="white"></div>
                 <div class="red"></div>
+                <!--<img src="assets/header.jpg" alt="drapeaufr" id="drapeau"/> -->
               <!-- <img src="../assets/header.png" alt="image"></img> -->
           </div>
           
@@ -36,16 +38,26 @@
           </main>
         </div>
         <script src="/vue-application.js"></script>
-        <footer class="footer"></footer>
+        <footer>
+            <img src="assets/logoEVote1.png" alt="Logo_page" id="logo"/>
+            <p>© 2022 Vote en ligne</p>
+        </footer>
     </body>
 </html>
 
 <style>
-  body{
-      margin: 0;
-      font-family: "Open sans", Arial;
-  }
-  
+html, body {
+    height: 100%;
+    margin: 0; padding: 0;
+}
+
+body{
+    margin: 0;
+    font-family: "Open sans", Arial;
+    display: table;
+    width: 100%
+}
+
 .header{
     display : flex;
     flex-direction: row;
@@ -55,22 +67,32 @@
     height: 5vw;
 }
 .blue{
-    background-color: blue;
+    background-color: rgb(0, 0, 159);
     width : 33.33%;
 }
 .red{
-    background-color: red;
+    background-color: rgb(230, 1, 1);
     width : 33.33%;
 }
 .white{
     background-color: white;
     width : 33.33%;
 }
-.footer{
-    width: 100%;
-    margin: 0;
-    height: 200px;
-    background-color: blue;
+
+#logo {
+    width: 170px;
 }
+
+footer {
+        padding: 10px 20px;
+        background: rgb(255, 254, 254);
+        color: rgb(0, 0, 0);
+        text-align: center;
+        bottom: 0;
+        width: 100%;
+        padding-top:30px;
+        height: 50px;
+        display: table-row;
+      }
 
 </style>

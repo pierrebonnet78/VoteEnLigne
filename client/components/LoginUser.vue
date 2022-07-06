@@ -39,8 +39,8 @@
           class="form-control"
         />
         <p>Choisissez votre méthode d'indentification : </p>
-        <button @click="handlePasseportClick()"> Numéro de passeport </button>
-        <button @click="handleIdClick()"> Numéro de carte d'identité </button>
+        <button @click="handlePasseportClick()" style="font-size: 16px"> Numéro de passeport </button>
+        <button @click="handleIdClick()" style="font-size: 16px"> Numéro de carte d'identité </button>
         <br>
         
         <input
@@ -62,7 +62,7 @@
         
       </div>
 
-      <div id="btn-grp" style= "margin-top: 10px;" >
+      <div id="btn-grp" style= "margin-top: 15px;" >
         <button @click="loginUser()" class="btn-default">Connexion</button>
       </div>
     </form>
@@ -120,30 +120,20 @@ module.exports = {
 };
 </script>
 
-<style scoped
+<style scoped>
 h1 {
   text-align: center;
   font-family: "Open sans", Arial;
   font-size: 40px;
-  font-weight: bold;
-  text-decoration: underline;
-  display: flex;
-}
-
-form {
-  text-align: center;
 }
 
 #btn-grp {
   margin-top: 600px;
+  font-size: 17px;
 }
 
 #input-grp {
   margin-top: 50px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .btn-default {
@@ -156,11 +146,10 @@ form {
 }
 
 .form-control {
-  background: rgb(190, 189, 189);
-  border: 0;
-  font-size: 20px;
-  text-align: center;
-  display: flex;
+  background: rgb(255, 254, 254);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 2px;
+  font-size: 17px;
   position: relative;
   margin-top: 20px;
 }

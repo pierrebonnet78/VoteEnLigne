@@ -49,9 +49,7 @@ module.exports = {
 .body h1 {
   font-family: "Open sans", Arial;
   font-size: 40px;
-  font-weight: bold;
   text-align: center;
-  text-decoration: underline;
 }
 
 form {
@@ -78,6 +76,7 @@ form {
 .body .form-control {
   background: rgb(255, 255, 255);
   border: 1px solid rgba(0, 0, 0);
+  border-radius: 3px;
   font-size: 18px;
 }
 .body .form-control::-webkit-input-placeholder {

@@ -62,25 +62,26 @@
       </table>
     </div>
 
-    <form id="myform">
+    <form>
+      <div class="input-groupe"> 
       <input
         type="text"
         v-model="newCitoyen.nom"
         placeholder="Nom"
         class="input-text"
-      /><br />
+      />
       <input
         type="text"
         v-model="newCitoyen.prenom"
         placeholder="Prénom"
         class="input-text"
-      /><br />
+      />
       <input
         type="date"
         v-model="newCitoyen.date_naissance"
         placeholder="Date de naissance"
         class="input-text"
-      /><br />
+      />
       <input
         type="text"
         v-model="newCitoyen.lieu_naissance"
@@ -88,7 +89,7 @@
         class="input-text"
         @click="handleClickInput()"
         @focus="handleClickInput()"
-      /><br />
+      />
       <div v-if="searching">
         <table class="table">
           <tbody>
@@ -109,19 +110,21 @@
         v-model="newCitoyen.numero_electeur"
         placeholder="Numéro d'électeur"
         class="input-text"
-      /><br />
+      />
       <input
         type="text"
         v-model="newCitoyen.numero_carte_id"
         placeholder="Numéro carte identité"
         class="input-text"
-      /><br />
+      />
       <input
         type="text"
         v-model="newCitoyen.numero_passeport"
         placeholder="Numéro passeport"
         class="input-text"
-      /><br />
+      />
+      </div>
+      <div class="btn-groupe">
       <button v-if="!modifyng" @click="addCitoyen()" class="btn-default">
         Ajouter
       </button>
@@ -131,6 +134,7 @@
       <button v-if="modifyng" @click="handleAnnulerClick()" class="btn-default">
         Annuler
       </button>
+      </div>
     </form>
   </div>
 </template>
@@ -263,6 +267,10 @@ module.exports = {
   text-align: center;
 }
 
+.input-groupe {
+  margin-top: 50px;
+}
+
 .btn-default {
   text-align: center;
   background: rgb(151, 149, 149);
@@ -273,10 +281,17 @@ module.exports = {
   margin-top: 20px;
 }
 .input-text {
-  background: rgb(252, 252, 252);
+  background: rgb(255, 254, 254);
   border: 1px solid rgb(0, 0, 0);
-  font-size: 18px;
+  border-radius: 2px;
+  font-size: 17px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.btn-groupe {
   margin-top: 15px;
+  font-size: 17px;
 }
 
 .citoyen_tableau {

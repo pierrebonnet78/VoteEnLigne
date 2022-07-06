@@ -189,9 +189,7 @@ module.exports = {
 .content h1 {
   font-family: "Open sans", Arial;
   font-size: 40px;
-  font-weight: bold;
   text-align: center;
-  text-decoration: underline;
 }
 
 .content h2 {

@@ -17,7 +17,7 @@
       <div v-if="error" class="error">{{ error }}</div>
       <div v-if="listeVille" class="content">
         <div v-if="searching">
-          <input type="text" v-model="searchText" placeholder="Search" /> <br />
+          <input type="text" v-model="searchText" placeholder="Search" style="font-size: 15px"/> <br />
           <br />
 
           <table class="table">
@@ -39,7 +39,7 @@
     <br> <br/>
     <button>
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
-      <router-link to="/AdminLogin">Connexion Admin</router-link>
+      <router-link class="boutonAdmin" to="/AdminLogin">Connexion Admin</router-link>
     </button>
   </div>
 </template>
@@ -115,6 +115,10 @@ module.exports = {
   height: 5vw;
 }
 
+.title {
+  font-size: 40px;
+}
+
 button {
   color: #090909;
   padding: 0.7em 1.7em;
@@ -123,7 +127,11 @@ button {
   background: #e8e8e8;
   border: 1px solid #e8e8e8;
   transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
+
+.boutonAdmin {
+  text-decoration: none;
+  color: inherit;
 }
 
 button:hover {
