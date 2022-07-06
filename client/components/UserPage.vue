@@ -56,9 +56,6 @@
 
 <script>
 module.exports = {
-  // props: {
-  //   electionstats: { type: Object, default: {} },
-  // },
   data() {
     return {
       user: {},
@@ -82,6 +79,7 @@ module.exports = {
       try {
         const res = await axios.get("/api/getElection");
         this.election = res.data;
+        this.$emit("setelectionstats", this.election);
         //this.loading = false;
       } catch (error) {
         this.error = error;
@@ -170,7 +168,7 @@ module.exports = {
       this.user = JSON.parse(localStorage.getItem("citoyen"));
     },
     handleStats(){
-      //router.push("/Stats")
+      router.push("StatsPage")
     }
   },
   async created() {
@@ -189,7 +187,13 @@ module.exports = {
 .content h1 {
   font-family: "Open sans", Arial;
   font-size: 40px;
+<<<<<<< HEAD
   text-align: center;
+=======
+  font-weight: 500;
+  text-align: center;
+  
+>>>>>>> 237c89d56e5d03f5517816d6f6eb9ac0968b9ffe
 }
 
 .content h2 {

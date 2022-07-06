@@ -23,8 +23,8 @@
           <table class="table">
             <tbody>
               <tr
-                v-for="(ville, index) in filteredVille"
-                v-if="index < 10"
+                v-for="ville in filteredVille"
+                v-if="searchText"
                 @click="selectVille(ville)"
                 :key="ville.IdVille"
               >
@@ -36,7 +36,8 @@
         </div>
       </div>
     </div>
-    <br> <br/>
+    <br />
+    <br />
     <button>
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
       <router-link class="boutonAdmin" to="/AdminLogin">Connexion Admin</router-link>
@@ -74,7 +75,7 @@ module.exports = {
     async fetchVille() {
       this.error = this.listeVille = null;
       try {
-        const res = await axios.get("/api/getville");
+        const res = await axios.get("/api/getVilles");
         this.listeVille = res.data;
         this.loading = false;
       } catch (er) {
@@ -85,7 +86,6 @@ module.exports = {
       this.searchText = ville.NomVille;
 
       this.$emit("setvilleselected", ville);
-      //this.villeselected = ville;
       router.push("LoginUser");
     },
     handleClick() {

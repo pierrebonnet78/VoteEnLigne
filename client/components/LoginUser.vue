@@ -49,7 +49,7 @@
           v-model="citoyen.numero_passeport"
           placeholder="Numéro de passeport"
           required
-          class="form-control"
+          class="form-control, input-numero"
         />
         <input
           type="text"
@@ -57,7 +57,7 @@
           v-model="citoyen.numero_carte_id"
           placeholder="Numéro d'identité"
           required
-          class="form-control"
+          class="form-control, input-numero"
         />
         
       </div>
@@ -123,7 +123,6 @@ module.exports = {
 <style scoped>
 h1 {
   text-align: center;
-  font-family: "Open sans", Arial;
   font-size: 40px;
 }
 
@@ -152,8 +151,10 @@ h1 {
   font-size: 17px;
   position: relative;
   margin-top: 20px;
+  
 }
 .body .form-control::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.342);
 }
+
 </style>

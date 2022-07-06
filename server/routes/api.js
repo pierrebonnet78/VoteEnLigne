@@ -323,7 +323,7 @@ router.post("/listeelectorale", (req, res) => {
   });
 });
 
-router.get("/getville", (req, res) => {
+router.get("/getVilles", (req, res) => {
   var sql = "Select * from Ville ORDER BY CodePostal;";
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
@@ -371,6 +371,126 @@ router.post("/vote", (req, res) => {
   db.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json("Vote enregistré");
+  });
+});
+
+router.post("/getResults", (req, res) => {
+  const IdElection = req.body.IdElection;
+
+  var sql =
+    "select * from Candidat where IdElectionCandidature =" +
+    IdElection +
+    "  order by NbVote DESC";
+  console.log(sql);
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getNbVote", (req, res) => {
+  var sql = "select count(*) as nbVoteTotal from citoyen where a_vote = 1 ";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getAbstention", (req, res) => {
+  var sql = "select count(*) as nbNonVote from citoyen where a_vote = 0 ";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getRegions", (req, res) => {
+  var sql = "select * from region order by NomRegion ASC";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.get("/getDepartements", (req, res) => {
+  var sql = "select * from departement order by NomDepartement ASC";
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getNbVoteByVille", (req, res) => {
+  const IdVille = req.body.id;
+  var sql =
+    "select count(*) as nbVoteTotal from citoyen where IdVilleDomicile =" +
+    IdVille;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getNbVoteByRegion", (req, res) => {
+  const IdRegion = req.body.id;
+  var sql =
+    "select count(*) as nbVoteTotal from citoyen  inner join ville on IdVilleDomicile = ville.IdVille" +
+    " inner join dans on ville.IdVille = dans.IdVille inner join departement " +
+    " on departement.IdDepartement = dans.IdDepartement where IdRegion = " +
+    IdRegion;
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getNbVoteByDepartement", (req, res) => {
+  const IdDepartement = req.body.id;
+  var sql =
+    "select count(*) as nbVoteTotal from citoyen  inner join ville on IdVilleDomicile = ville.IdVille" +
+    " inner join dans on ville.IdVille = dans.IdVille where IdDepartement = " +
+    IdDepartement;
+
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getAbstentionByVille", (req, res) => {
+  const IdVille = req.body.id;
+  var sql =
+    "select count(*) as nbNonVote from citoyen where a_vote = 0 and IdVilleDomicile=" +
+    IdVille;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getAbstentionByRegion", (req, res) => {
+  const IdRegion = req.body.id;
+  var sql =
+    "select count(*) as nbNonVote from citoyen  inner join ville on IdVilleDomicile = ville.IdVille" +
+    " inner join dans on ville.IdVille = dans.IdVille inner join departement " +
+    " on departement.IdDepartement = dans.IdDepartement where a_vote=0 and IdRegion = " +
+    IdRegion;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
+router.post("/getAbstentionByDepartement", (req, res) => {
+  const IdDepartement = req.body.id;
+  var sql =
+    "select count(*) as nbNonVote from citoyen  inner join ville on IdVilleDomicile = ville.IdVille" +
+    " inner join dans on ville.IdVille = dans.IdVille where IdDepartement = " +
+    IdDepartement;
+  db.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
   });
 });
 
