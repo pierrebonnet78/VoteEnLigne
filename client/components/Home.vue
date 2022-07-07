@@ -8,7 +8,7 @@
         <!-- <router-link to="/LoginUser" class="btn-default"
           >Sélectionner une commune</router-link
         > -->
-        <button @click="handleClick()">Sélectionner votre commune</button>
+        <button @click="handleClick()" style="width: 300px;">Sélectionner votre commune</button>
       </div>
 
       <div v-if="loading" class="loading">
@@ -26,11 +26,11 @@
           <br />
           <br />
 
-          <table class="table">
+          <table class="table" v-if="searchText">
             <tbody>
               <tr
                 v-for="ville in filteredVille"
-                v-if="searchText"
+                
                 @click="selectVille(ville)"
                 :key="ville.IdVille"
               >
@@ -44,11 +44,9 @@
     </div>
     <br />
     <br />
-    <button>
+    <button style="width: 300px;">
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
-      <router-link class="boutonAdmin" to="/AdminLogin"
-        >Connexion Admin</router-link
-      >
+      <router-link class="boutonAdmin" to="/AdminLogin" >Connexion Admin</router-link>
     </button>
   </div>
 </template>

@@ -34,11 +34,11 @@
             class="form-control"
             v-model="searchText"
           />
-          <table class="table">
+          <table class="table" v-if="filtreRegion && searchText">
             <tbody>
               <tr
-                v-for="(region, index) in filteredRegion"
-                v-if="filtreRegion && searchText"
+                v-for="(region) in filteredRegion"
+                
                 :key="region.IdRegion"
                 @click="handleRegionClick(region)"
               >
@@ -46,11 +46,11 @@
               </tr>
             </tbody>
           </table>
-          <table class="table">
+          <table class="table" v-if="filtreDepartement && searchText">
             <tbody>
               <tr
-                v-for="(departement, index) in filteredDepartement"
-                v-if="filtreDepartement && searchText"
+                v-for="(departement) in filteredDepartement"
+                
                 :key="departement.IdDepartement"
                 @click="handleDepartementClick(departement)"
               >
@@ -58,11 +58,11 @@
               </tr>
             </tbody>
           </table>
-          <table class="table">
+          <table class="table" v-if="filtreVille && searchText"
+>
             <tbody>
               <tr
-                v-for="(ville, index) in filteredVille"
-                v-if="filtreVille && searchText"
+                v-for="(ville) in filteredVille"
                 :key="ville.IdVille"
                 @click="handleVilleClick(ville)"
               >
@@ -83,12 +83,13 @@
     <p style="margin-left: 20px">Abstention : {{ abstention }} ⛔</p>
     <p style="margin-left: 20px">Pourcentage d'Abstention : {{ abstentionPourcentage }} %</p>
 
+  <div v-if="percentageCalculated && !filtreActivate">
     <div
       v-for="candidat in results"
       :key="candidat.IdCandidat"
-      v-if="percentageCalculated && !filtreActivate"
       style="text-align: center"
     >
+    </div>
       <p>
         {{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }} :
         {{ candidat.percentage }} % <br />

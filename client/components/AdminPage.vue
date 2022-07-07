@@ -87,21 +87,20 @@
           @click="handleClickInput()"
           @focus="handleClickInput()"
         />
-        <div v-if="searching">
-          <table class="table">
-            <tbody>
-              <tr
-                v-for="(ville, index) in filteredVille"
-                v-if="index < 10"
-                @click="handleClickVille(ville)"
-                :key="ville.IdVille"
-              >
-                <td>{{ ville.NomVille }}</td>
-                <td>{{ ville.CodePostal }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+        <table class="table" v-if="searching">
+          <tbody>
+            <tr
+              v-for="ville in filteredVille"
+              @click="handleClickVille(ville)"
+              :key="ville.IdVille"
+            >
+              <td>{{ ville.NomVille }}</td>
+              <td>{{ ville.CodePostal }}</td>
+            </tr>
+          </tbody>
+        </table>
+
         <input
           type="text"
           v-model="newCitoyen.numero_electeur"
@@ -220,11 +219,10 @@ module.exports = {
       this.modifyng = false;
     },
     handleClickInput() {
-      this.searching = true;
+      this.searching = false;
     },
     handleClickVille(ville) {
       this.newCitoyen.lieu_naissance = ville.NomVille;
-      this.searching = false;
     },
     handleAnnulerClick() {
       (this.newCitoyen.nom = ""),
