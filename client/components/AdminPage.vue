@@ -40,7 +40,7 @@
         <tbody>
           <tr
             v-for="citoyen in listeelectorale"
-            :key="listeelectorale.IdCitoyen"
+            :key="citoyen.IdCitoyen"
           >
             <td class="tg-0lax">{{ citoyen.Nom }}</td>
             <td class="tg-0lax">{{ citoyen.Prenom }}</td>
@@ -94,8 +94,7 @@
         <table class="table">
           <tbody>
             <tr
-              v-for="(ville, index) in filteredVille"
-              v-if="index < 10"
+              v-for="(ville) in filteredVille"
               @click="handleClickVille(ville)"
               :key="ville.IdVille"
             >

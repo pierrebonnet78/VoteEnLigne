@@ -17,14 +17,20 @@
       <div v-if="error" class="error">{{ error }}</div>
       <div v-if="listeVille" class="content">
         <div v-if="searching">
-          <input type="text" v-model="searchText" placeholder="Search" style="font-size: 15px"/> <br />
+          <input
+            type="text"
+            v-model="searchText"
+            placeholder="Search"
+            style="font-size: 15px"
+          />
+          <br />
           <br />
 
-          <table class="table">
+          <table class="table" v-if="searchText">
             <tbody>
               <tr
                 v-for="ville in filteredVille"
-                v-if="searchText"
+                
                 @click="selectVille(ville)"
                 :key="ville.IdVille"
               >
