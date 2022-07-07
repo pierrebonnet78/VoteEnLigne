@@ -1,99 +1,105 @@
 <template>
-  <div v-if="election" class="content" style="margin-bottom: 25px">
-    <h1>Statistiques de l'{{ election[0].NomElection }}</h1>
-    <form>
-      <div id="input-grp">
-        <p>Filtrer les résultats :</p>
-
-        <div>
-          <div class="div-button">
-            <button @click="handleFiltreRegionClick()">Par région</button>
-            <button @click="handleFiltreDepartementClick()">
-              Par département
-            </button>
-            <button @click="handleFiltreVilleClick()">Par ville</button>
+  <div v-if="election" class="content">
+    <div v-if="election" class="content" style="margin-bottom: 25px">
+      <h1>Statistiques de l'{{ election[0].NomElection }}</h1>
+      <form>
+        <div id="input-grp">
+          <p>Filtrer les résultats :</p>
+          <div>
+            <div class="div-button">
+              <button @click="handleFiltreRegionClick()">Par région</button>
+              <button @click="handleFiltreDepartementClick()">
+                Par département
+              </button>
+              <button @click="handleFiltreVilleClick()">Par ville</button>
+            </div>
+            <input
+              type="text"
+              v-if="filtreRegion"
+              placeholder="Chercher région"
+              class="form-control"
+              v-model="searchText"
+            />
+            <input
+              type="text"
+              v-if="filtreDepartement"
+              v-model="searchText"
+              placeholder="Chercher département"
+              class="form-control"
+            />
+            <input
+              type="text"
+              v-if="filtreVille"
+              placeholder="Chercher ville"
+              class="form-control"
+              v-model="searchText"
+            />
+            <table class="table">
+              <tbody>
+                <tr
+                  v-for="(region, index) in filteredRegion"
+                  v-if="filtreRegion && searchText"
+                  :key="region.IdRegion"
+                  @click="handleRegionClick(region)"
+                >
+                  <td>{{ region.NomRegion }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table">
+              <tbody>
+                <tr
+                  v-for="(departement, index) in filteredDepartement"
+                  v-if="filtreDepartement && searchText"
+                  :key="departement.IdDepartement"
+                  @click="handleDepartementClick(departement)"
+                >
+                  <td>{{ departement.NomDepartement }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table">
+              <tbody>
+                <tr
+                  v-for="(ville, index) in filteredVille"
+                  v-if="filtreVille && searchText"
+                  :key="ville.IdVille"
+                  @click="handleVilleClick(ville)"
+                >
+                  <td>{{ ville.NomVille }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <input
-            type="text"
-            v-if="filtreRegion"
-            placeholder="Chercher région"
-            class="form-control"
-            v-model="searchText"
-          />
-          <input
-            type="text"
-            v-if="filtreDepartement"
-            v-model="searchText"
-            placeholder="Chercher département"
-            class="form-control"
-          />
-          <input
-            type="text"
-            v-if="filtreVille"
-            placeholder="Chercher ville"
-            class="form-control"
-            v-model="searchText"
-          />
-          <table class="table" v-if="filtreRegion && searchText">
-            <tbody>
-              <tr
-                v-for="(region) in filteredRegion"
-                
-                :key="region.IdRegion"
-                @click="handleRegionClick(region)"
-              >
-                <td>{{ region.NomRegion }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table" v-if="filtreDepartement && searchText">
-            <tbody>
-              <tr
-                v-for="(departement) in filteredDepartement"
-                
-                :key="departement.IdDepartement"
-                @click="handleDepartementClick(departement)"
-              >
-                <td>{{ departement.NomDepartement }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table" v-if="filtreVille && searchText"
->
-            <tbody>
-              <tr
-                v-for="(ville) in filteredVille"
-                :key="ville.IdVille"
-                @click="handleVilleClick(ville)"
-              >
-                <td>{{ ville.NomVille }}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
-      </div>
-      <div id="btn-grp" style="margin-top: 10px">
-        <button @click="handleReinitialiser()" class="btn-default">
-          Réinitialiser
-        </button>
-        <button @click="handleSearch()" class="btn-default">Rechercher</button>
-      </div>
-    </form>
-    <p style="margin-left: 20px">Nombre de votes total : {{ nbVoteTotal }} ✉️</p>
-    <p style="margin-left: 20px">Abstention : {{ abstention }} ⛔</p>
-    <p style="margin-left: 20px">Pourcentage d'Abstention : {{ abstentionPourcentage }} %</p>
-
-  <div v-if="percentageCalculated && !filtreActivate">
-    <div
-      v-for="candidat in results"
-      :key="candidat.IdCandidat"
-      style="text-align: center"
-    >
-    </div>
-      <p>
-        {{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }} :
-        {{ candidat.percentage }} % <br />
+        <div id="btn-grp" style="margin-top: 10px">
+          <button @click="handleReinitialiser()" class="btn-default">
+            Réinitialiser
+          </button>
+          <button @click="handleSearch()" class="btn-default">
+            Rechercher
+          </button>
+        </div>
+      </form>
+      <p style="margin-left: 20px">
+        Nombre de votes total : {{ nbVoteTotal }} ✉️
       </p>
+      <p style="margin-left: 20px">Abstention : {{ abstention }} ⛔</p>
+      <p style="margin-left: 20px">
+        Pourcentage d'Abstention : {{ abstentionPourcentage }} %
+      </p>
+
+      <div
+        v-for="candidat in results"
+        :key="candidat.IdCandidat"
+        v-if="percentageCalculated && !filtreActivate"
+        style="text-align: center"
+      >
+        <p>
+          {{ candidat.PrenomCandidat }} {{ candidat.NomCandidat }} :
+          {{ candidat.percentage }} % <br />
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -132,7 +138,6 @@ module.exports = {
         this.error = error;
         return;
       }
-
       //get results
       try {
         const res = await axios.post("/api/getResults", this.election[0]);
@@ -140,7 +145,6 @@ module.exports = {
       } catch (error) {
         this.error = error;
       }
-
       //get nb total vote
       try {
         const res = await axios.get("/api/getNbVote");
@@ -148,7 +152,6 @@ module.exports = {
       } catch (error) {
         this.error = error;
       }
-
       //get nb total pas voté
       try {
         const res = await axios.get("/api/getAbstention");
@@ -168,7 +171,6 @@ module.exports = {
         ).toFixed(2);
         this.percentageCalculated = true;
       });
-
       //get list of region
       try {
         const res = await axios.get("/api/getRegions");
@@ -176,7 +178,6 @@ module.exports = {
       } catch (error) {
         this.error = error;
       }
-
       //get list of departement
       try {
         const res = await axios.get("/api/getDepartements");
@@ -184,7 +185,6 @@ module.exports = {
       } catch (error) {
         this.error = error;
       }
-
       //get list of ville
       try {
         const res = await axios.get("/api/getVilles");
@@ -233,7 +233,6 @@ module.exports = {
     },
     async handleSearch() {
       this.filtreActivate = true;
-
       try {
         if (this.filtreVille) {
           var res = await axios.post("/api/getNbVoteByVille", this.selection);
@@ -316,7 +315,6 @@ module.exports = {
   },
 };
 </script>
-
 <style scoped>
 .content h1 {
   font-family: "Open sans", Arial;
@@ -330,7 +328,6 @@ form {
 #btn-grp {
   margin-top: 600px;
 }
-
 #input-grp {
   margin-top: 50px;
   position: relative;
@@ -338,7 +335,6 @@ form {
   flex-direction: column;
   align-items: center;
 }
-
 .div-button {
   display: flex;
   flex-direction: row;
@@ -353,16 +349,13 @@ form {
   padding: 5px 15px;
   margin-top: 20px;
 }
-
 input {
   margin-top: 15px;
 }
-
 tr:hover {
   cursor: pointer;
   font-weight: bold;
 }
-
 table {
   margin: auto;
 }

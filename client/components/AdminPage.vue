@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <h1>
-      Liste Electorale de {{ currentAdmin.Nom }} {{ currentAdmin.CodePostal }}
+      Liste Electorale de {{ currentAdmin.NomVille }}
+      {{ currentAdmin.CodePostal }}
     </h1>
 
     <div v-if="loading" class="loading">
@@ -87,20 +88,20 @@
           @click="handleClickInput()"
           @focus="handleClickInput()"
         />
-
-        <table class="table" v-if="searching">
-          <tbody>
-            <tr
-              v-for="ville in filteredVille"
-              @click="handleClickVille(ville)"
-              :key="ville.IdVille"
-            >
-              <td>{{ ville.NomVille }}</td>
-              <td>{{ ville.CodePostal }}</td>
-            </tr>
-          </tbody>
-        </table>
-
+        <div v-if="searching">
+          <table class="table">
+            <tbody>
+              <tr
+                v-for="ville in filteredVille"
+                @click="handleClickVille(ville)"
+                :key="ville.IdVille"
+              >
+                <td>{{ ville.NomVille }}</td>
+                <td>{{ ville.CodePostal }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <input
           type="text"
           v-model="newCitoyen.numero_electeur"
@@ -219,10 +220,11 @@ module.exports = {
       this.modifyng = false;
     },
     handleClickInput() {
-      this.searching = false;
+      this.searching = true;
     },
     handleClickVille(ville) {
       this.newCitoyen.lieu_naissance = ville.NomVille;
+      this.searching = false;
     },
     handleAnnulerClick() {
       (this.newCitoyen.nom = ""),
