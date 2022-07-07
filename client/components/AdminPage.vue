@@ -38,10 +38,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="citoyen in listeelectorale"
-            :key="listeelectorale.IdCitoyen"
-          >
+          <tr v-for="citoyen in listeelectorale" :key="citoyen.IdCitoyen">
             <td class="tg-0lax">{{ citoyen.Nom }}</td>
             <td class="tg-0lax">{{ citoyen.Prenom }}</td>
             <td class="tg-0lax">{{ citoyen.DateNaissance }}</td>
@@ -63,77 +60,81 @@
     </div>
 
     <form>
-      <div class="input-groupe"> 
-      <input
-        type="text"
-        v-model="newCitoyen.nom"
-        placeholder="Nom"
-        class="input-text"
-      />
-      <input
-        type="text"
-        v-model="newCitoyen.prenom"
-        placeholder="Prénom"
-        class="input-text"
-      />
-      <input
-        type="date"
-        v-model="newCitoyen.date_naissance"
-        placeholder="Date de naissance"
-        class="input-text"
-      />
-      <input
-        type="text"
-        v-model="newCitoyen.lieu_naissance"
-        placeholder="Ville de naissance"
-        class="input-text"
-        @click="handleClickInput()"
-        @focus="handleClickInput()"
-      />
-      <div v-if="searching">
-        <table class="table">
-          <tbody>
-            <tr
-              v-for="(ville, index) in filteredVille"
-              v-if="index < 10"
-              @click="handleClickVille(ville)"
-              :key="ville.IdVille"
-            >
-              <td>{{ ville.NomVille }}</td>
-              <td>{{ ville.CodePostal }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <input
-        type="text"
-        v-model="newCitoyen.numero_electeur"
-        placeholder="Numéro d'électeur"
-        class="input-text"
-      />
-      <input
-        type="text"
-        v-model="newCitoyen.numero_carte_id"
-        placeholder="Numéro carte identité"
-        class="input-text"
-      />
-      <input
-        type="text"
-        v-model="newCitoyen.numero_passeport"
-        placeholder="Numéro passeport"
-        class="input-text"
-      />
+      <div class="input-groupe">
+        <input
+          type="text"
+          v-model="newCitoyen.nom"
+          placeholder="Nom"
+          class="input-text"
+        />
+        <input
+          type="text"
+          v-model="newCitoyen.prenom"
+          placeholder="Prénom"
+          class="input-text"
+        />
+        <input
+          type="date"
+          v-model="newCitoyen.date_naissance"
+          placeholder="Date de naissance"
+          class="input-text"
+        />
+        <input
+          type="text"
+          v-model="newCitoyen.lieu_naissance"
+          placeholder="Ville de naissance"
+          class="input-text"
+          @click="handleClickInput()"
+          @focus="handleClickInput()"
+        />
+        <div v-if="searching">
+          <table class="table">
+            <tbody>
+              <tr
+                v-for="(ville, index) in filteredVille"
+                v-if="index < 10"
+                @click="handleClickVille(ville)"
+                :key="ville.IdVille"
+              >
+                <td>{{ ville.NomVille }}</td>
+                <td>{{ ville.CodePostal }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <input
+          type="text"
+          v-model="newCitoyen.numero_electeur"
+          placeholder="Numéro d'électeur"
+          class="input-text"
+        />
+        <input
+          type="text"
+          v-model="newCitoyen.numero_carte_id"
+          placeholder="Numéro carte identité"
+          class="input-text"
+        />
+        <input
+          type="text"
+          v-model="newCitoyen.numero_passeport"
+          placeholder="Numéro passeport"
+          class="input-text"
+        />
       </div>
       <div class="btn-groupe">
-      <button v-if="!modifyng" @click="addCitoyen()" class="btn-default">
-        Ajouter
-      </button>
-      <button v-if="modifyng" @click="updateCitoyen()" class="btn-default">
-        Modifier
-      </button>
-      <button v-if="modifyng" @click="handleAnnulerClick()" class="btn-default">
-        Annuler
-      </button>
+        <button v-if="!modifyng" @click="addCitoyen()" class="btn-default">
+          Ajouter
+        </button>
+        <button v-if="modifyng" @click="updateCitoyen()" class="btn-default">
+          Modifier
+        </button>
+        <button
+          v-if="modifyng"
+          @click="handleAnnulerClick()"
+          class="btn-default"
+        >
+          Annuler
+        </button>
       </div>
     </form>
   </div>
