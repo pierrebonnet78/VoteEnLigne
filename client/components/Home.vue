@@ -17,7 +17,13 @@
       <div v-if="error" class="error">{{ error }}</div>
       <div v-if="listeVille" class="content">
         <div v-if="searching">
-          <input type="text" v-model="searchText" placeholder="Search" style="font-size: 15px"/> <br />
+          <input
+            type="text"
+            v-model="searchText"
+            placeholder="Search"
+            style="font-size: 15px"
+          />
+          <br />
           <br />
 
           <table class="table">
@@ -40,7 +46,9 @@
     <br />
     <button>
       <!-- <button  @onclick={} class="btn-default">Connexion Admin</button> -->
-      <router-link class="boutonAdmin" to="/AdminLogin">Connexion Admin</router-link>
+      <router-link class="boutonAdmin" to="/AdminLogin"
+        >Connexion Admin</router-link
+      >
     </button>
   </div>
 </template>

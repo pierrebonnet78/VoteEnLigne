@@ -29,7 +29,7 @@
           <button @click="handleValidate()" v-if="confirmChoice == 'Confirmer mon choix'">✅</button>
         </div>
       </div>
-      <div v-if="isJourDeVote == 1 && user.a_vote == null" class="container">
+      <div v-if="isJourDeVote == 1 && user.a_vote == 0" class="container">
         <h2>🗳️ Les votes sont ouverts 🗳️</h2>
         <h2>Votez pour votre candidat en cliquant sur celui-ci.</h2>
         <div class="liste-candidat">
@@ -187,13 +187,9 @@ module.exports = {
 .content h1 {
   font-family: "Open sans", Arial;
   font-size: 40px;
-<<<<<<< HEAD
-  text-align: center;
-=======
   font-weight: 500;
   text-align: center;
   
->>>>>>> 237c89d56e5d03f5517816d6f6eb9ac0968b9ffe
 }
 
 .content h2 {

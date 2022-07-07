@@ -1,6 +1,6 @@
 <template>
-  <div class="body" style="text-align: center;" v-if="villeselected">
-    <h1>Portail Electeur ville de {{villeselected.NomVille}} </h1>
+  <div class="body" style="text-align: center" v-if="villeselected">
+    <h1>Portail Electeur ville de {{ villeselected.NomVille }}</h1>
     <form>
       <div id="input-grp">
         <input
@@ -26,11 +26,28 @@
         />
         <input
           type="text"
-          v-model="citoyen.lieu_naissance"
+          v-model="searchText"
           placeholder="Lieu de naissance"
+          style="font-size: 15px"
           required
           class="form-control"
+          @click="handleClick()"
         />
+        <div v-if="villes" class="content">
+          <table class="table">
+            <tbody>
+              <tr
+                v-if="searchText"
+                v-for="ville in filteredVille"
+                @click="selectVille(ville)"
+                :key="ville.IdVille"
+              >
+                <td>{{ ville.NomVille }}</td>
+                <td>{{ ville.CodePostal }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <input
           type="text"
           v-model="citoyen.numero_electeur"
@@ -38,11 +55,15 @@
           required
           class="form-control"
         />
-        <p>Choisissez votre méthode d'indentification : </p>
-        <button @click="handlePasseportClick()" style="font-size: 16px"> Numéro de passeport </button>
-        <button @click="handleIdClick()" style="font-size: 16px"> Numéro de carte d'identité </button>
-        <br>
-        
+        <p>Choisissez votre méthode d'indentification :</p>
+        <button @click="handlePasseportClick()" style="font-size: 16px">
+          Numéro de passeport
+        </button>
+        <button @click="handleIdClick()" style="font-size: 16px">
+          Numéro de carte d'identité
+        </button>
+        <br />
+
         <input
           type="text"
           v-if="connectionWithPasseport"
@@ -59,10 +80,9 @@
           required
           class="form-control, input-numero"
         />
-        
       </div>
 
-      <div id="btn-grp" style= "margin-top: 15px;" >
+      <div id="btn-grp" style="margin-top: 15px">
         <button @click="loginUser()" class="btn-default">Connexion</button>
       </div>
     </form>
@@ -77,7 +97,7 @@ module.exports = {
   data() {
     return {
       citoyen: {
-         nom: "",
+        nom: "",
         prenom: "",
         date_naissance: "",
         lieu_naissance: "",
@@ -85,38 +105,72 @@ module.exports = {
         numero_carte_id: "",
         numero_passeport: "",
         id_lieu_domicile: "",
-        connection_type : ""  // 0 : numéro passeport, 1 : numéro Id
+        connection_type: "", // 0 : numéro passeport, 1 : numéro Id
       },
-      connectionWithPasseport : false,
-      connectionWithId : false,
+      villes: [],
+      searching: false,
+      connectionWithPasseport: false,
+      connectionWithId: false,
+      searchText: "",
     };
+  },
+  computed: {
+    filteredVille() {
+      if (this != null) {
+        return this.villes.filter((p) => {
+          return (
+            p.NomVille.toLowerCase().indexOf(this.searchText.toLowerCase()) !=
+            -1
+          );
+        });
+      }
+    },
   },
   methods: {
     loginUser() {
-        this.citoyen.id_lieu_domicile = this.villeselected.IdVille
-        this.$emit("loginuser", this.citoyen);
-      
+      this.citoyen.id_lieu_domicile = this.villeselected.IdVille;
+      this.$emit("loginuser", this.citoyen);
     },
-    handlePasseportClick(){
-        this.connectionWithPasseport = !this.connectionWithPasseport;
-        this.citoyen.connection_type = 0;
-        if(this.connectionWithId){
-            this.connectionWithId = false
-        }
+    handlePasseportClick() {
+      this.connectionWithPasseport = !this.connectionWithPasseport;
+      this.citoyen.connection_type = 0;
+      if (this.connectionWithId) {
+        this.connectionWithId = false;
+      }
     },
-    handleIdClick(){
-        this.connectionWithId = !this.connectionWithId;
-        this.citoyen.connection_type = 1;
-         if(this.connectionWithPasseport){
-            this.connectionWithPasseport = false
-        }
-    }
+    handleIdClick() {
+      this.connectionWithId = !this.connectionWithId;
+      this.citoyen.connection_type = 1;
+      if (this.connectionWithPasseport) {
+        this.connectionWithPasseport = false;
+      }
+    },
+    handleClick() {
+      this.searching = true;
+    },
+    selectVille(ville) {
+      this.searchText = ville.NomVille;
+      this.citoyen.lieu_naissance = ville.NomVille;
+      console.log(this.lieu_naissance);
+    },
+    async fetchVille() {
+      this.villes = null;
+      try {
+        const res = await axios.get("/api/getVilles");
+        this.villes = res.data;
+        this.loading = false;
+      } catch (er) {
+        this.error = er;
+      }
+    },
   },
   created() {
-    if(!this.villeselected){
-        router.push("/")
+    if (!this.villeselected) {
+      router.push("/");
     }
-  }
+    console.log(this.villeselected);
+    this.fetchVille();
+  },
 };
 </script>
 
@@ -151,10 +205,18 @@ h1 {
   font-size: 17px;
   position: relative;
   margin-top: 20px;
-  
 }
 .body .form-control::-webkit-input-placeholder {
   color: rgba(0, 0, 0, 0.342);
 }
 
+tr:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+table {
+  margin: auto;
+  padding-top: 15px;
+}
 </style>
