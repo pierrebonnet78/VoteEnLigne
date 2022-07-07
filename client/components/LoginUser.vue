@@ -49,7 +49,8 @@
           v-model="citoyen.numero_passeport"
           placeholder="Numéro de passeport"
           required
-          class="form-control, input-numero"
+          class="form-control, input-numero" 
+          style="margin-top: 20px;"
         />
         <input
           type="text"
@@ -58,6 +59,7 @@
           placeholder="Numéro d'identité"
           required
           class="form-control, input-numero"
+          style="margin-top: 20px;"
         />
         
       </div>
